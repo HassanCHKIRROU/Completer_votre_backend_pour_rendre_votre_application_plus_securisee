@@ -1,54 +1,89 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.CurvePoint;
+import com.nnk.springboot.service.CurvePointService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-
+/**
+ * Contrôleur MVC pour CurvePoint : liste, ajout, mise à jour, suppression.
+ */
 @Controller
 public class CurveController {
-    // TODO: Inject Curve Point service
+	
 
-    @RequestMapping("/curvePoint/list")
-    public String home(Model model)
-    {
-        // TODO: find all Curve Point, add to model
+    private final CurvePointService service;
+
+    public CurveController(CurvePointService service) {
+        this.service = service;
+    }
+
+    
+    
+    
+    /** GET /curvePoint/list : affiche la liste */
+    @GetMapping("/curvePoint/list")
+    public String home(Model model) {
+        model.addAttribute("curvePoints", service.findAll());
         return "curvePoint/list";
     }
 
+    
+    
+    /** GET /curvePoint/add : formulaire d'ajout */
     @GetMapping("/curvePoint/add")
-    public String addBidForm(CurvePoint bid) {
+    public String addForm(CurvePoint curvePoint) {
         return "curvePoint/add";
     }
 
+    
+    
+    /** POST /curvePoint/validate : valider et enregistrer */
     @PostMapping("/curvePoint/validate")
     public String validate(@Valid CurvePoint curvePoint, BindingResult result, Model model) {
-        // TODO: check data valid and save to db, after saving return Curve list
-        return "curvePoint/add";
-    }
-
-    @GetMapping("/curvePoint/update/{id}")
-    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        // TODO: get CurvePoint by Id and to model then show to the form
-        return "curvePoint/update";
-    }
-
-    @PostMapping("/curvePoint/update/{id}")
-    public String updateBid(@PathVariable("id") Integer id, @Valid CurvePoint curvePoint,
-                             BindingResult result, Model model) {
-        // TODO: check required fields, if valid call service to update Curve and return Curve list
+        if (result.hasErrors()) {
+            return "curvePoint/add";
+        }
+        service.save(curvePoint);
         return "redirect:/curvePoint/list";
     }
 
+    
+    
+    /** GET /curvePoint/update/{id} : pré-remplir le formulaire */
+    @GetMapping("/curvePoint/update/{id}")
+    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
+        CurvePoint cp = service.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid CurvePoint Id: " + id));
+        model.addAttribute("curvePoint", cp);
+        return "curvePoint/update";
+    }
+
+    
+    
+    /** POST /curvePoint/update/{id} : valider et mettre à jour */
+    @PostMapping("/curvePoint/update/{id}")
+    public String update(@PathVariable("id") Integer id,
+                         @Valid CurvePoint curvePoint,
+                         BindingResult result,
+                         Model model) {
+        if (result.hasErrors()) {
+            curvePoint.setId(id);
+            return "curvePoint/update";
+        }
+        service.update(id, curvePoint);
+        return "redirect:/curvePoint/list";
+    }
+
+    
+    
+    /** GET /curvePoint/delete/{id} : supprimer puis revenir à la liste */
     @GetMapping("/curvePoint/delete/{id}")
-    public String deleteBid(@PathVariable("id") Integer id, Model model) {
-        // TODO: Find Curve by Id and delete the Curve, return to Curve list
+    public String delete(@PathVariable("id") Integer id, Model model) {
+        service.deleteById(id);
         return "redirect:/curvePoint/list";
     }
 }

@@ -2,45 +2,46 @@ package com.nnk.springboot;
 
 import com.nnk.springboot.domain.Rating;
 import com.nnk.springboot.repositories.RatingRepository;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 import java.util.Optional;
 
-@RunWith(SpringRunner.class)
+import static org.assertj.core.api.Assertions.assertThat;
+
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class RatingTests {
+class RatingTests {
 
-	@Autowired
-	private RatingRepository ratingRepository;
+    @Autowired
+    private RatingRepository ratingRepository;
 
-	@Test
-	public void ratingTest() {
-		Rating rating = new Rating("Moodys Rating", "Sand PRating", "Fitch Rating", 10);
+    @Test
+    void rating_crud_ok() {
+        // Create & Save (constructeur: moodysRating, sandPRating, fitchRating, order)
+        Rating rating = new Rating("Moodys Rating", "Sand PRating", "Fitch Rating", 10);
+        rating = ratingRepository.save(rating);
 
-		// Save
-		rating = ratingRepository.save(rating);
-		Assert.assertNotNull(rating.getId());
-		Assert.assertTrue(rating.getOrderNumber() == 10);
+        assertThat(rating.getId()).isNotNull();
+        assertThat(rating.getOrder()).isEqualTo(10);
 
-		// Update
-		rating.setOrderNumber(20);
-		rating = ratingRepository.save(rating);
-		Assert.assertTrue(rating.getOrderNumber() == 20);
+        // Update
+        rating.setOrder(20);
+        rating = ratingRepository.save(rating);
+        assertThat(rating.getOrder()).isEqualTo(20);
 
-		// Find
-		List<Rating> listResult = ratingRepository.findAll();
-		Assert.assertTrue(listResult.size() > 0);
+        // Find all
+        List<Rating> listResult = ratingRepository.findAll();
+        assertThat(listResult).isNotEmpty();
 
-		// Delete
-		Integer id = rating.getId();
-		ratingRepository.delete(rating);
-		Optional<Rating> ratingList = ratingRepository.findById(id);
-		Assert.assertFalse(ratingList.isPresent());
-	}
+        // Delete
+        Integer id = rating.getId();
+        ratingRepository.delete(rating);
+        Optional<Rating> afterDelete = ratingRepository.findById(id);
+        assertThat(afterDelete).isNotPresent();
+    }
 }

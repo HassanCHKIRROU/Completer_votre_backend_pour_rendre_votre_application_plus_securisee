@@ -1,60 +1,60 @@
 package com.nnk.springboot.domain;
 
-import javax.persistence.*;
-import javax.validation.constraints.NotBlank;
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
 
+/**
+ * Entité JPA pour la table users.
+ * - username unique
+ * - password avec règles de complexité (majuscule, chiffre, symbole, min 8)
+ * - colonnes non nulles et tailles raisonnables
+ */
 @Entity
 @Table(name = "users")
 public class User {
+
     @Id
-    @GeneratedValue(strategy= GenerationType.AUTO)
+    @GeneratedValue(strategy = GenerationType.IDENTITY) // auto-incrément MySQL
     private Integer id;
+
     @NotBlank(message = "Username is mandatory")
+    @Column(nullable = false, unique = true, length = 50)
     private String username;
+
     @NotBlank(message = "Password is mandatory")
+    @Size(min = 8, message = "Password must be at least 8 characters")
+    @Pattern(
+        regexp = "^(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z0-9]).{8,}$",
+        message = "Password must contain at least one uppercase letter, one digit and one symbol"
+    )
+    @Column(nullable = false, length = 60) // 60 pour BCrypt
     private String password;
+
     @NotBlank(message = "FullName is mandatory")
+    @Column(nullable = false, length = 100)
     private String fullname;
+
     @NotBlank(message = "Role is mandatory")
+    @Column(nullable = false, length = 20)
     private String role;
 
-    public Integer getId() {
-        return id;
-    }
+    public User() {}
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+    // Getters / Setters
+    public Integer getId() { return id; }
+    public void setId(Integer id) { this.id = id; }
 
-    public String getUsername() {
-        return username;
-    }
+    public String getUsername() { return username; }
+    public void setUsername(String username) { this.username = username; }
 
-    public void setUsername(String username) {
-        this.username = username;
-    }
+    public String getPassword() { return password; }
+    public void setPassword(String password) { this.password = password; }
 
-    public String getPassword() {
-        return password;
-    }
+    public String getFullname() { return fullname; }
+    public void setFullname(String fullname) { this.fullname = fullname; }
 
-    public void setPassword(String password) {
-        this.password = password;
-    }
-
-    public String getFullname() {
-        return fullname;
-    }
-
-    public void setFullname(String fullname) {
-        this.fullname = fullname;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setRole(String role) {
-        this.role = role;
-    }
+    public String getRole() { return role; }
+    public void setRole(String role) { this.role = role; }
 }

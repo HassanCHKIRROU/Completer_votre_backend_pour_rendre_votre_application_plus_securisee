@@ -1,24 +1,28 @@
 package com.nnk.springboot;
 
-import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.test.context.junit4.SpringRunner;
 
-/**
- * Created by Khang Nguyen.
- * Email: khang.nguyen@banvien.com
- * Date: 09/03/2019
- * Time: 11:26 AM
- */
-@RunWith(SpringRunner.class)
-@SpringBootTest
-public class PasswordEncodeTest {
+import static org.assertj.core.api.Assertions.assertThat;
+
+class PasswordEncodeTest {
+
     @Test
-    public void testPassword() {
+    void bcrypt_encode_and_match() {
         BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
-        String pw = encoder.encode("123456");
-        System.out.println("[ "+ pw + " ]");
+
+        // Mot de passe conforme aux règles (≥8, 1 maj, 1 chiffre, 1 symbole)
+        String raw = "Abcdef1!";
+
+        String hash = encoder.encode(raw);
+
+        // Vérifie que le hash correspond au mot de passe
+        assertThat(encoder.matches(raw, hash)).isTrue();
+
+        // Vérifie qu'un mauvais mot de passe ne matche pas
+        assertThat(encoder.matches("WrongPass1!", hash)).isFalse();
+
+        // Optionnel: afficher le hash si on veut le voir dans la console
+        // System.out.println("Hash = " + hash);
     }
 }

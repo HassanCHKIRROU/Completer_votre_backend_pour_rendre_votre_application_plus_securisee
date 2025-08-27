@@ -1,54 +1,88 @@
 package com.nnk.springboot.controllers;
 
 import com.nnk.springboot.domain.RuleName;
+import com.nnk.springboot.service.RuleNameService;
+import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
-
+/**
+ * Contrôleur MVC pour RuleName : liste, ajout, mise à jour, suppression.
+ */
 @Controller
 public class RuleNameController {
-    // TODO: Inject RuleName service
+	
 
-    @RequestMapping("/ruleName/list")
-    public String home(Model model)
-    {
-        // TODO: find all RuleName, add to model
+    private final RuleNameService service;
+
+    public RuleNameController(RuleNameService service) {
+        this.service = service;
+    }
+
+    
+    
+    /** GET /ruleName/list : affiche la liste des règles */
+    @GetMapping("/ruleName/list")
+    public String home(Model model) {
+        model.addAttribute("ruleNames", service.findAll());
         return "ruleName/list";
     }
 
+    
+    
+    /** GET /ruleName/add : formulaire d'ajout */
     @GetMapping("/ruleName/add")
-    public String addRuleForm(RuleName bid) {
+    public String addRuleForm(RuleName ruleName) {
         return "ruleName/add";
     }
 
+    
+    
+    /** POST /ruleName/validate : valider et enregistrer */
     @PostMapping("/ruleName/validate")
     public String validate(@Valid RuleName ruleName, BindingResult result, Model model) {
-        // TODO: check data valid and save to db, after saving return RuleName list
-        return "ruleName/add";
-    }
-
-    @GetMapping("/ruleName/update/{id}")
-    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
-        // TODO: get RuleName by Id and to model then show to the form
-        return "ruleName/update";
-    }
-
-    @PostMapping("/ruleName/update/{id}")
-    public String updateRuleName(@PathVariable("id") Integer id, @Valid RuleName ruleName,
-                             BindingResult result, Model model) {
-        // TODO: check required fields, if valid call service to update RuleName and return RuleName list
+        if (result.hasErrors()) {
+            return "ruleName/add";
+        }
+        service.save(ruleName);
         return "redirect:/ruleName/list";
     }
 
+    
+    
+    /** GET /ruleName/update/{id} : pré-remplir le formulaire */
+    @GetMapping("/ruleName/update/{id}")
+    public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
+        RuleName rn = service.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid RuleName Id: " + id));
+        model.addAttribute("ruleName", rn);
+        return "ruleName/update";
+    }
+
+    
+    
+    /** POST /ruleName/update/{id} : valider et mettre à jour */
+    @PostMapping("/ruleName/update/{id}")
+    public String updateRuleName(@PathVariable("id") Integer id,
+                                 @Valid RuleName ruleName,
+                                 BindingResult result,
+                                 Model model) {
+        if (result.hasErrors()) {
+            ruleName.setId(id); // garder l'ID dans le formulaire
+            return "ruleName/update";
+        }
+        service.update(id, ruleName);
+        return "redirect:/ruleName/list";
+    }
+
+    
+    
+    /** GET /ruleName/delete/{id} : supprimer puis revenir à la liste */
     @GetMapping("/ruleName/delete/{id}")
     public String deleteRuleName(@PathVariable("id") Integer id, Model model) {
-        // TODO: Find RuleName by Id and delete the RuleName, return to Rule list
+        service.deleteById(id);
         return "redirect:/ruleName/list";
     }
 }

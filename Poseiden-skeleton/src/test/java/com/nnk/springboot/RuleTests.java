@@ -2,45 +2,49 @@ package com.nnk.springboot;
 
 import com.nnk.springboot.domain.RuleName;
 import com.nnk.springboot.repositories.RuleNameRepository;
-import org.junit.Assert;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.List;
 import java.util.Optional;
 
-@RunWith(SpringRunner.class)
+import static org.assertj.core.api.Assertions.assertThat;
+
+@ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class RuleTests {
+class RuleTests {
+	
 
-	@Autowired
-	private RuleNameRepository ruleNameRepository;
+    @Autowired
+    private RuleNameRepository ruleNameRepository;
 
-	@Test
-	public void ruleTest() {
-		RuleName rule = new RuleName("Rule Name", "Description", "Json", "Template", "SQL", "SQL Part");
+    
+    
+    @Test
+    void rule_crud_ok() {
+        // Create & Save
+        RuleName rule = new RuleName("Rule Name", "Description", "Json", "Template", "SQL", "SQL Part");
+        rule = ruleNameRepository.save(rule);
 
-		// Save
-		rule = ruleNameRepository.save(rule);
-		Assert.assertNotNull(rule.getId());
-		Assert.assertTrue(rule.getName().equals("Rule Name"));
+        assertThat(rule.getId()).isNotNull();
+        assertThat(rule.getName()).isEqualTo("Rule Name");
 
-		// Update
-		rule.setName("Rule Name Update");
-		rule = ruleNameRepository.save(rule);
-		Assert.assertTrue(rule.getName().equals("Rule Name Update"));
+        // Update
+        rule.setName("Rule Name Update");
+        rule = ruleNameRepository.save(rule);
+        assertThat(rule.getName()).isEqualTo("Rule Name Update");
 
-		// Find
-		List<RuleName> listResult = ruleNameRepository.findAll();
-		Assert.assertTrue(listResult.size() > 0);
+        // Find all
+        List<RuleName> listResult = ruleNameRepository.findAll();
+        assertThat(listResult).isNotEmpty();
 
-		// Delete
-		Integer id = rule.getId();
-		ruleNameRepository.delete(rule);
-		Optional<RuleName> ruleList = ruleNameRepository.findById(id);
-		Assert.assertFalse(ruleList.isPresent());
-	}
+        // Delete
+        Integer id = rule.getId();
+        ruleNameRepository.delete(rule);
+        Optional<RuleName> afterDelete = ruleNameRepository.findById(id);
+        assertThat(afterDelete).isNotPresent();
+    }
 }
