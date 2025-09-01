@@ -1,0 +1,20 @@
+.poseidon-brand{
+  position: fixed;      /* visible en bas à droite */
+  right: 24px;
+  bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  opacity: .85;
+  z-index: 9999;
+}
+.poseidon-brand img{ height: 196px; }
+.poseidon-brand .brand-text{
+  color:#1f3b62;
+  font-weight: 600;
+  line-height: 1.05;
+  font-size: 14px;
+}
+@media print{
+  .poseidon-brand{ position: absolute; }
+}

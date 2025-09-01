@@ -6,21 +6,21 @@ import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
 
 /**
- * Entité JPA pour la table users.
+ * Entité JPA pour la table Users (mapping conforme au script SQL).
  * - username unique
  * - password avec règles de complexité (majuscule, chiffre, symbole, min 8)
- * - colonnes non nulles et tailles raisonnables
  */
 @Entity
-@Table(name = "users")
+@Table(name = "Users")
 public class User {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // auto-incrément MySQL
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "Id") // PK conforme au script
     private Integer id;
 
     @NotBlank(message = "Username is mandatory")
-    @Column(nullable = false, unique = true, length = 50)
+    @Column(name = "username", nullable = false, unique = true, length = 125)
     private String username;
 
     @NotBlank(message = "Password is mandatory")
@@ -29,15 +29,15 @@ public class User {
         regexp = "^(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z0-9]).{8,}$",
         message = "Password must contain at least one uppercase letter, one digit and one symbol"
     )
-    @Column(nullable = false, length = 60) // 60 pour BCrypt
+    @Column(name = "password", nullable = false, length = 125) // 125 selon le script, 60 suffisent pour BCrypt
     private String password;
 
     @NotBlank(message = "FullName is mandatory")
-    @Column(nullable = false, length = 100)
+    @Column(name = "fullname", nullable = false, length = 125)
     private String fullname;
 
     @NotBlank(message = "Role is mandatory")
-    @Column(nullable = false, length = 20)
+    @Column(name = "role", nullable = false, length = 125)
     private String role;
 
     public User() {}

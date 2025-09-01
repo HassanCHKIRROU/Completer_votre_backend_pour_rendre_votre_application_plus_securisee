@@ -13,14 +13,12 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-
 class UserServiceTest {
 
     private UserRepository repo;
     private PasswordEncoder encoder;
     private UserService service;
 
-    
     @BeforeEach
     void setUp() {
         repo = mock(UserRepository.class);
@@ -28,8 +26,6 @@ class UserServiceTest {
         service = new UserServiceImpl(repo, encoder);
     }
 
-    
-    
     @Test
     void findAll_returnsList() {
         when(repo.findAll()).thenReturn(List.of(
@@ -43,8 +39,6 @@ class UserServiceTest {
                 .containsExactly("u1", "u2");
     }
 
-    
-    
     @Test
     void findById_existing_returnsValue() {
         User u = buildUser(10, "user");
@@ -53,21 +47,16 @@ class UserServiceTest {
         assertThat(service.findById(10)).isPresent();
     }
 
-    
-    
     @Test
     void findById_unknown_returnsEmpty() {
         when(repo.findById(5)).thenReturn(Optional.empty());
         assertThat(service.findById(5)).isEmpty();
-   
     }
 
-    
-    /*
     @Test
     void findByUsername_delegatesToRepo_andWrapsOptional() {
         User u = buildUser(1, "john");
-        when(repo.findByUsername("john")).thenReturn(u);
+        when(repo.findByUsername("john")).thenReturn(Optional.of(u));
 
         assertThat(service.findByUsername("john"))
                 .isPresent()
@@ -75,9 +64,7 @@ class UserServiceTest {
                 .extracting(User::getUsername)
                 .isEqualTo("john");
     }
-*/
-   
-    
+
     @Test
     void save_encodesPassword_andPersists() {
         User u = new User();
@@ -96,8 +83,6 @@ class UserServiceTest {
         assertThat(saved.getPassword()).isEqualTo("ENCODED");
     }
 
-    
-    
     @Test
     void update_existing_updatesAndEncodesIfProvided() {
         User existing = buildUser(1, "old");
@@ -121,8 +106,6 @@ class UserServiceTest {
         verify(repo).save(existing);
     }
 
-    
-    
     @Test
     void update_existing_doesNotChangePassword_whenBlank() {
         User existing = buildUser(1, "user");
@@ -143,18 +126,14 @@ class UserServiceTest {
         verify(repo).save(existing);
     }
 
-    
-    
     @Test
     void update_unknown_throws() {
         when(repo.findById(404)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> service.update(404, new User()))
-                .isInstanceOf(NoSuchElementException.class);
+                .isInstanceOf(IllegalArgumentException.class);
         verify(repo, never()).save(any());
     }
 
-    
-    
     @Test
     void delete_existing_ok() {
         when(repo.existsById(2)).thenReturn(true);
@@ -162,13 +141,11 @@ class UserServiceTest {
         verify(repo).deleteById(2);
     }
 
-    
-    
     @Test
     void delete_unknown_throws() {
         when(repo.existsById(3)).thenReturn(false);
         assertThatThrownBy(() -> service.deleteById(3))
-                .isInstanceOf(NoSuchElementException.class);
+                .isInstanceOf(IllegalArgumentException.class);
         verify(repo, never()).deleteById(anyInt());
     }
 

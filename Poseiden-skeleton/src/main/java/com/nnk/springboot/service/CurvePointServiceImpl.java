@@ -49,7 +49,7 @@ public class CurvePointServiceImpl implements CurvePointService {
     @Override
     public CurvePoint update(Integer id, CurvePoint cp) {
         CurvePoint existing = repo.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("CurvePoint introuvable id=" + id));
+                .orElseThrow(() -> new IllegalArgumentException("CurvePoint introuvable id=" + id));
         
         // Les formulaires ne modifient que term & value ; on met à jour ces champs
         existing.setTerm(cp.getTerm());
@@ -65,7 +65,7 @@ public class CurvePointServiceImpl implements CurvePointService {
     @Override
     public void deleteById(Integer id) {
         if (!repo.existsById(id)) {
-            throw new NoSuchElementException("CurvePoint introuvable id=" + id);
+            throw new IllegalArgumentException("CurvePoint introuvable id=" + id);
         }
         repo.deleteById(id);
     }

@@ -5,6 +5,7 @@
 <meta charset="utf-8"/>
 <title>Home</title>
 <link rel="stylesheet" href="../../css/bootstrap.min.css" >
+<link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
 <div class="container">
@@ -69,5 +70,7 @@
 	</div>
 
 </div>
+<div th:replace="~{fragments/brand :: poseidonLogo}"></div>
+
 </body>
 </html>

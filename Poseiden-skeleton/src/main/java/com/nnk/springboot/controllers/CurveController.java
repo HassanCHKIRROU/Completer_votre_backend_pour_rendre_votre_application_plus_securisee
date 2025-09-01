@@ -8,12 +8,13 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 /**
  * Contrôleur MVC pour CurvePoint : liste, ajout, mise à jour, suppression.
  */
 @Controller
 public class CurveController {
-	
 
     private final CurvePointService service;
 
@@ -21,9 +22,12 @@ public class CurveController {
         this.service = service;
     }
 
-    
-    
-    
+    /** Injecte le nom de l'utilisateur pour toutes les vues de ce contrôleur */
+    @ModelAttribute("principalName")
+    public String principalName(Principal principal) {
+        return principal != null ? principal.getName() : "anonymous";
+    }
+
     /** GET /curvePoint/list : affiche la liste */
     @GetMapping("/curvePoint/list")
     public String home(Model model) {
@@ -31,19 +35,15 @@ public class CurveController {
         return "curvePoint/list";
     }
 
-    
-    
     /** GET /curvePoint/add : formulaire d'ajout */
     @GetMapping("/curvePoint/add")
     public String addForm(CurvePoint curvePoint) {
         return "curvePoint/add";
     }
 
-    
-    
     /** POST /curvePoint/validate : valider et enregistrer */
     @PostMapping("/curvePoint/validate")
-    public String validate(@Valid CurvePoint curvePoint, BindingResult result, Model model) {
+    public String validate(@Valid CurvePoint curvePoint, BindingResult result) {
         if (result.hasErrors()) {
             return "curvePoint/add";
         }
@@ -51,8 +51,6 @@ public class CurveController {
         return "redirect:/curvePoint/list";
     }
 
-    
-    
     /** GET /curvePoint/update/{id} : pré-remplir le formulaire */
     @GetMapping("/curvePoint/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
@@ -62,14 +60,11 @@ public class CurveController {
         return "curvePoint/update";
     }
 
-    
-    
     /** POST /curvePoint/update/{id} : valider et mettre à jour */
     @PostMapping("/curvePoint/update/{id}")
     public String update(@PathVariable("id") Integer id,
                          @Valid CurvePoint curvePoint,
-                         BindingResult result,
-                         Model model) {
+                         BindingResult result) {
         if (result.hasErrors()) {
             curvePoint.setId(id);
             return "curvePoint/update";
@@ -78,11 +73,9 @@ public class CurveController {
         return "redirect:/curvePoint/list";
     }
 
-    
-    
     /** GET /curvePoint/delete/{id} : supprimer puis revenir à la liste */
     @GetMapping("/curvePoint/delete/{id}")
-    public String delete(@PathVariable("id") Integer id, Model model) {
+    public String delete(@PathVariable("id") Integer id) {
         service.deleteById(id);
         return "redirect:/curvePoint/list";
     }

@@ -13,7 +13,7 @@ public interface UserService {
     
     Optional<User> findById(Integer id);
     
-   // Optional<User> findByUsername(String username);
+    Optional<User> findByUsername(String username);
     
     User save(User user);                 // encode le mot de passe
     

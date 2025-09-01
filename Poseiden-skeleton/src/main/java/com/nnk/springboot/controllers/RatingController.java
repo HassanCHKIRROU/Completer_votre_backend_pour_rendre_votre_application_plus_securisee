@@ -8,12 +8,10 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
-/**
- * Contrôleur MVC pour Rating : liste, ajout, mise à jour, suppression.
- */
+import java.security.Principal;
+
 @Controller
 public class RatingController {
-	
 
     private final RatingService service;
 
@@ -21,8 +19,12 @@ public class RatingController {
         this.service = service;
     }
 
-    
-    
+    /** Renseigne le nom de l'utilisateur connecté pour les vues de ce contrôleur */
+    @ModelAttribute("principalName")
+    public String principalName(Principal principal) {
+        return principal != null ? principal.getName() : "anonymous";
+    }
+
     /** GET /rating/list : affiche la liste des ratings */
     @GetMapping("/rating/list")
     public String home(Model model) {
@@ -30,19 +32,15 @@ public class RatingController {
         return "rating/list";
     }
 
-    
-    
     /** GET /rating/add : formulaire d'ajout */
     @GetMapping("/rating/add")
     public String addRatingForm(Rating rating) {
         return "rating/add";
     }
 
-    
-    
     /** POST /rating/validate : valider et enregistrer */
     @PostMapping("/rating/validate")
-    public String validate(@Valid Rating rating, BindingResult result, Model model) {
+    public String validate(@Valid Rating rating, BindingResult result) {
         if (result.hasErrors()) {
             return "rating/add";
         }
@@ -50,8 +48,6 @@ public class RatingController {
         return "redirect:/rating/list";
     }
 
-    
-    
     /** GET /rating/update/{id} : pré-remplir le formulaire */
     @GetMapping("/rating/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
@@ -61,27 +57,22 @@ public class RatingController {
         return "rating/update";
     }
 
-    
-    
     /** POST /rating/update/{id} : valider et mettre à jour */
     @PostMapping("/rating/update/{id}")
     public String updateRating(@PathVariable("id") Integer id,
                                @Valid Rating rating,
-                               BindingResult result,
-                               Model model) {
+                               BindingResult result) {
         if (result.hasErrors()) {
-            rating.setId(id); // s'assurer que l'ID est conservé dans le form
+            rating.setId(id); // conserver l'id si erreurs
             return "rating/update";
         }
         service.update(id, rating);
         return "redirect:/rating/list";
     }
 
-    
-    
     /** GET /rating/delete/{id} : supprimer puis revenir à la liste */
     @GetMapping("/rating/delete/{id}")
-    public String deleteRating(@PathVariable("id") Integer id, Model model) {
+    public String deleteRating(@PathVariable("id") Integer id) {
         service.deleteById(id);
         return "redirect:/rating/list";
     }

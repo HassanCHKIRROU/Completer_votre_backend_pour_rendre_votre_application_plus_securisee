@@ -4,86 +4,103 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
-
+import jakarta.validation.constraints.Digits;
 import java.sql.Timestamp;
+import java.math.BigDecimal;
 
 /**
- * Entité JPA pour la table trade.
+ * Entité JPA pour la table Trade (mapping conforme au script SQL).
  * Les formulaires Thymeleaf utilisent surtout account, type et buyQuantity.
  */
 @Entity
-@Table(name = "trade")
+@Table(name = "Trade")
 public class Trade {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "trade_id")
+    @Column(name = "TradeId") // PK exacte selon le script
     private Integer id;
 
     @NotBlank(message = "Account est obligatoire")
+    @Column(name = "account", nullable = false, length = 30)
     private String account;
 
     @NotBlank(message = "Type est obligatoire")
+    @Column(name = "type", nullable = false, length = 30)
     private String type;
 
     @NotNull(message = "Buy Quantity est obligatoire")
     @Positive(message = "Buy Quantity doit être > 0")
-    @Column(name = "buy_quantity")
-    private Double buyQuantity;
+    @Digits(integer = 20, fraction = 2, message = "Buy Quantity invalide (max 20 chiffres, 2 décimales)")
+    @Column(name = "buyQuantity", precision = 20, scale = 2)
+    private BigDecimal buyQuantity;
 
-    @Column(name = "sell_quantity")
-    private Double sellQuantity;
+    @Column(name = "sellQuantity", precision = 20, scale = 2)
+    private BigDecimal sellQuantity;
 
-    @Column(name = "buy_price")
-    private Double buyPrice;
+    @Column(name = "buyPrice", precision = 20, scale = 2)
+    private BigDecimal buyPrice;
 
-    @Column(name = "sell_price")
-    private Double sellPrice;
+    @Column(name = "sellPrice", precision = 20, scale = 2)
+    private BigDecimal sellPrice;
 
+    @Column(name = "benchmark")
     private String benchmark;
 
-    @Column(name = "trade_date")
+    @Column(name = "tradeDate")
     private Timestamp tradeDate;
 
+    @Column(name = "security")
     private String security;
+
+    @Column(name = "status", length = 10)
     private String status;
+
+    @Column(name = "trader")
     private String trader;
+
+    @Column(name = "book")
     private String book;
 
-    @Column(name = "creation_name")
+    @Column(name = "creationName")
     private String creationName;
 
-    @Column(name = "creation_date")
+    @Column(name = "creationDate")
     private Timestamp creationDate;
 
-    @Column(name = "revision_name")
+    @Column(name = "revisionName")
     private String revisionName;
 
-    @Column(name = "revision_date")
+    @Column(name = "revisionDate")
     private Timestamp revisionDate;
 
-    @Column(name = "deal_name")
+    @Column(name = "dealName")
     private String dealName;
 
-    @Column(name = "deal_type")
+    @Column(name = "dealType")
     private String dealType;
 
-    @Column(name = "source_list_id")
+    @Column(name = "sourceListId")
     private String sourceListId;
 
+    @Column(name = "side")
     private String side;
 
     public Trade() {}
 
-    public Trade(String account, String type, Double buyQuantity) {
+    public Trade(String account, String type, BigDecimal buyQuantity) {
         this.account = account;
         this.type = type;
         this.buyQuantity = buyQuantity;
     }
 
-    // Getters & Setters
+    // --- Getters & Setters ---
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
+
+    // Alias pour compatibilité avec les templates (trade.tradeId)
+    public Integer getTradeId() { return id; }
+    public void setTradeId(Integer tradeId) { this.id = tradeId; }
 
     public String getAccount() { return account; }
     public void setAccount(String account) { this.account = account; }
@@ -91,17 +108,17 @@ public class Trade {
     public String getType() { return type; }
     public void setType(String type) { this.type = type; }
 
-    public Double getBuyQuantity() { return buyQuantity; }
-    public void setBuyQuantity(Double buyQuantity) { this.buyQuantity = buyQuantity; }
+    public BigDecimal getBuyQuantity() { return buyQuantity; }
+    public void setBuyQuantity(BigDecimal buyQuantity) { this.buyQuantity = buyQuantity; }
 
-    public Double getSellQuantity() { return sellQuantity; }
-    public void setSellQuantity(Double sellQuantity) { this.sellQuantity = sellQuantity; }
+    public BigDecimal getSellQuantity() { return sellQuantity; }
+    public void setSellQuantity(BigDecimal sellQuantity) { this.sellQuantity = sellQuantity; }
 
-    public Double getBuyPrice() { return buyPrice; }
-    public void setBuyPrice(Double buyPrice) { this.buyPrice = buyPrice; }
+    public BigDecimal getBuyPrice() { return buyPrice; }
+    public void setBuyPrice(BigDecimal buyPrice) { this.buyPrice = buyPrice; }
 
-    public Double getSellPrice() { return sellPrice; }
-    public void setSellPrice(Double sellPrice) { this.sellPrice = sellPrice; }
+    public BigDecimal getSellPrice() { return sellPrice; }
+    public void setSellPrice(BigDecimal sellPrice) { this.sellPrice = sellPrice; }
 
     public String getBenchmark() { return benchmark; }
     public void setBenchmark(String benchmark) { this.benchmark = benchmark; }

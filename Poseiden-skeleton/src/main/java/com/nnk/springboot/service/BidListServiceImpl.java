@@ -6,15 +6,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-//import java.util.NoSuchElementException;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 /** Implémentation simple du service BidList. */
 @Service
 @Transactional
 public class BidListServiceImpl implements BidListService {
-	
-	private final BidListRepository repo;
+
+    private final BidListRepository repo;
 
     public BidListServiceImpl(BidListRepository repo) {
         this.repo = repo;
@@ -41,9 +41,12 @@ public class BidListServiceImpl implements BidListService {
     public BidList update(Integer id, BidList bid) {
         BidList existing = repo.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("BidList introuvable id=" + id));
+        // On met à jour uniquement les champs éditables depuis le formulaire
         existing.setAccount(bid.getAccount());
         existing.setType(bid.getType());
         existing.setBidQuantity(bid.getBidQuantity());
+        // On garantit l'id
+        existing.setId(id);
         return repo.save(existing);
     }
 
@@ -54,7 +57,4 @@ public class BidListServiceImpl implements BidListService {
         }
         repo.deleteById(id);
     }
-	
-	
-
 }

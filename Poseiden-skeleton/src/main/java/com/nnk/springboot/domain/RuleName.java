@@ -4,35 +4,40 @@ import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 
 /**
- * Entité JPA pour la table rulename.
+ * Entité JPA pour la table RuleName (mapping conforme au script SQL).
  * Champs alignés avec les formulaires Thymeleaf.
  */
 @Entity
-@Table(name = "rulename")
+@Table(name = "RuleName")
 public class RuleName {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "Id")
     private Integer id;
 
     @NotBlank(message = "Name est obligatoire")
+    @Column(name = "name")
     private String name;
 
     @NotBlank(message = "Description est obligatoire")
+    @Column(name = "description")
     private String description;
 
     @NotBlank(message = "Json est obligatoire")
+    @Column(name = "json")
     private String json;
 
     @NotBlank(message = "Template est obligatoire")
+    @Column(name = "template", length = 512)
     private String template;
 
     @NotBlank(message = "SQL est obligatoire")
-    @Column(name = "sql_str")
-    private String sql;
+    @Column(name = "sqlStr")   
+    private String sql;        
 
     @NotBlank(message = "SQL Part est obligatoire")
-    @Column(name = "sql_part")
+    @Column(name = "sqlPart")
     private String sqlPart;
 
     public RuleName() {}

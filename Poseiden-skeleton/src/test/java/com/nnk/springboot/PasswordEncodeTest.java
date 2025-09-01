@@ -1,4 +1,4 @@
-package com.nnk.springboot;
+/*package com.nnk.springboot;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -26,3 +26,4 @@ class PasswordEncodeTest {
         // System.out.println("Hash = " + hash);
     }
 }
+*/

@@ -98,7 +98,7 @@ class RuleNameServiceTest {
     void update_unknown_throws() {
         when(repo.findById(404)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> service.update(404, new RuleName()))
-                .isInstanceOf(NoSuchElementException.class);
+                .isInstanceOf(IllegalArgumentException.class);
         verify(repo, never()).save(any());
     }
 
@@ -117,7 +117,7 @@ class RuleNameServiceTest {
     void delete_unknown_throws() {
         when(repo.existsById(3)).thenReturn(false);
         assertThatThrownBy(() -> service.deleteById(3))
-                .isInstanceOf(NoSuchElementException.class);
+                .isInstanceOf(IllegalArgumentException.class);
         verify(repo, never()).deleteById(anyInt());
     }
 }

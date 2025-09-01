@@ -8,22 +8,26 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
+
 /**
- * CRUD MVC pour User 
+ * CRUD MVC pour User
  */
 @Controller
 public class UserController {
-	
 
     private final UserService userService;
 
-    
     public UserController(UserService userService) {
         this.userService = userService;
     }
 
-    
-    
+    /** Renseigne le nom d'utilisateur connecté pour toutes les vues de ce contrôleur */
+    @ModelAttribute("principalName")
+    public String principalName(Principal principal) {
+        return principal != null ? principal.getName() : "anonymous";
+    }
+
     /** GET /user/list : affiche la liste des utilisateurs */
     @GetMapping("/user/list")
     public String home(Model model) {
@@ -31,16 +35,12 @@ public class UserController {
         return "user/list";
     }
 
-    
-    
     /** GET /user/add : formulaire d'ajout */
     @GetMapping("/user/add")
     public String addUser(User user) {
         return "user/add";
     }
 
-    
-    
     /** POST /user/validate : valider et enregistrer un nouvel utilisateur */
     @PostMapping("/user/validate")
     public String validate(@Valid User user, BindingResult result) {
@@ -51,35 +51,31 @@ public class UserController {
         return "redirect:/user/list";
     }
 
-    
-    
     /** GET /user/update/{id} : pré-remplir le formulaire d'édition */
     @GetMapping("/user/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         User user = userService.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("Invalid user Id: " + id));
-        // On vide le champ password pour forcer une nouvelle saisie
+        // On vide le champ password pour forcer une nouvelle saisie (si souhaité)
         user.setPassword("");
         model.addAttribute("user", user);
         return "user/update";
     }
 
-    
-    
     /** POST /user/update/{id} : valider et mettre à jour */
     @PostMapping("/user/update/{id}")
     public String updateUser(@PathVariable("id") Integer id,
                              @Valid User user,
                              BindingResult result) {
         if (result.hasErrors()) {
+            // s'assurer que l'ID est conservé si le champ caché est perdu
+            user.setId(id);
             return "user/update";
         }
         userService.update(id, user); // encode si mot de passe fourni
         return "redirect:/user/list";
     }
 
-    
-    
     /** GET /user/delete/{id} : supprimer puis revenir à la liste */
     @GetMapping("/user/delete/{id}")
     public String deleteUser(@PathVariable("id") Integer id) {

@@ -2,52 +2,46 @@ package com.nnk.springboot.domain;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
-import java.time.Instant;
+import java.math.BigDecimal;
 
 /**
- * Entité JPA pour la table bidlist.
- * Champs alignés avec les formulaires: account, type, bidQuantity.
+ * Entité JPA pour la table BidList.
+ * Compatible avec le script SQL et les templates Thymeleaf.
  */
 @Entity
-@Table(name = "bidlist")
+@Table(name = "BidList")
 public class BidList {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "BidListId") // PK dans le script SQL
     private Integer id;
 
     @NotBlank(message = "Account est obligatoire")
-    @Column(nullable = false, length = 100)
+    @Column(name = "account", nullable = false, length = 30)
     private String account;
 
     @NotBlank(message = "Type est obligatoire")
-    @Column(nullable = false, length = 100)
+    @Column(name = "type", nullable = false, length = 30)
     private String type;
 
     @NotNull(message = "Bid Quantity est obligatoire")
     @Positive(message = "Bid Quantity doit être > 0")
-    @Digits(integer = 12, fraction = 2, message = "Bid Quantity invalide (max 12 chiffres, 2 décimales)")
-    @Column(name = "bid_quantity")
-    private Double bidQuantity;
+    @Digits(integer = 20, fraction = 2, message = "Bid Quantity invalide (max 20 chiffres, 2 décimales)")
+    @Column(name = "bidQuantity", nullable = false, precision = 20, scale = 2) // Aligné avec DECIMAL(20,2)
+    private BigDecimal bidQuantity;
 
-    @Column(name = "creation_ts", nullable = false, updatable = false)
-    private Instant creationTs;
-
+    // Constructeur par défaut
     public BidList() {}
 
-    public BidList(String account, String type, Double bidQuantity) {
+    // Constructeur utile
+    public BidList(String account, String type, BigDecimal bidQuantity) {
         this.account = account;
         this.type = type;
         this.bidQuantity = bidQuantity;
     }
 
-    @PrePersist
-    public void prePersist() {
-        if (creationTs == null) {
-            creationTs = Instant.now();
-        }
-    }
-
+    // Getters / Setters
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
@@ -57,9 +51,6 @@ public class BidList {
     public String getType() { return type; }
     public void setType(String type) { this.type = type; }
 
-    public Double getBidQuantity() { return bidQuantity; }
-    public void setBidQuantity(Double bidQuantity) { this.bidQuantity = bidQuantity; }
-
-    public Instant getCreationTs() { return creationTs; }
-    public void setCreationTs(Instant creationTs) { this.creationTs = creationTs; }
+    public BigDecimal getBidQuantity() { return bidQuantity; }
+    public void setBidQuantity(BigDecimal bidQuantity) { this.bidQuantity = bidQuantity; }
 }

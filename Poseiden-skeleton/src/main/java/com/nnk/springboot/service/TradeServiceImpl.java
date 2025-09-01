@@ -50,7 +50,7 @@ public class TradeServiceImpl implements TradeService {
     @Override
     public Trade update(Integer id, Trade t) {
         Trade existing = repo.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Trade introuvable id=" + id));
+                .orElseThrow(() -> new IllegalArgumentException("Trade introuvable id=" + id));
 
         // Champs manipulés par les formulaires
         existing.setAccount(t.getAccount());
@@ -84,7 +84,7 @@ public class TradeServiceImpl implements TradeService {
     @Override
     public void deleteById(Integer id) {
         if (!repo.existsById(id)) {
-            throw new NoSuchElementException("Trade introuvable id=" + id);
+            throw new IllegalArgumentException("Trade introuvable id=" + id);
         }
         repo.deleteById(id);
     }

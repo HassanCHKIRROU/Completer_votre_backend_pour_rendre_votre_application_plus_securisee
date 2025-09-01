@@ -5,32 +5,38 @@ import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 
 /**
- * Entité JPA pour la table rating.
+ * Entité JPA pour la table Rating (conforme au script SQL).
  * Champs alignés avec les formulaires Thymeleaf.
  */
 @Entity
-@Table(name = "rating")
+@Table(name = "Rating")
 public class Rating {
 
+	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "Id")
     private Integer id;
 
+    
     @NotBlank(message = "Moodys Rating est obligatoire")
-    @Column(name = "moodys_rating")
+    @Column(name = "moodysRating")
     private String moodysRating;
 
+    
     @NotBlank(message = "SandP Rating est obligatoire")
-    @Column(name = "sandp_rating")
+    @Column(name = "sandPRating")
     private String sandPRating;
 
+    
     @NotBlank(message = "Fitch Rating est obligatoire")
-    @Column(name = "fitch_rating")
+    @Column(name = "fitchRating")
     private String fitchRating;
 
-    @NotNull(message = "Order est obligatoire")
-    @Column(name = "order_number")
-    private Integer order;  // Correspond au champ "order" dans les templates
+    
+    @NotNull(message = "Order Number est obligatoire")
+    @Column(name = "orderNumber")
+    private Integer order;  
 
     public Rating() {}
 

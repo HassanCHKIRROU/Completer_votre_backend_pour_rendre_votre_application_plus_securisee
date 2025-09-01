@@ -6,35 +6,30 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.ArgumentCaptor;
 
+import java.math.BigDecimal;
 import java.util.List;
-import java.util.NoSuchElementException;
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-
 /** Tests unitaires du service BidList */
 class BidListServiceTest {
 
-	
     private BidListRepository repo;
     private BidListService service;
 
-    
     @BeforeEach
     void setUp() {
         repo = mock(BidListRepository.class);
         service = new BidListServiceImpl(repo);
     }
 
-    
-    
     @Test
     void findAll_returnsList() {
         when(repo.findAll()).thenReturn(List.of(
-                new BidList("acc1", "type1", 10.0),
-                new BidList("acc2", "type2", 20.0)
+                new BidList("acc1", "type1", new BigDecimal("10.00")),
+                new BidList("acc2", "type2", new BigDecimal("20.00"))
         ));
 
         assertThat(service.findAll())
@@ -43,11 +38,9 @@ class BidListServiceTest {
                 .containsExactly("acc1", "acc2");
     }
 
-    
-    
     @Test
     void findById_existing_returnsOptionalWithValue() {
-        BidList b = new BidList("acc", "type", 5.0);
+        BidList b = new BidList("acc", "type", new BigDecimal("5.00"));
         b.setId(42);
         when(repo.findById(42)).thenReturn(Optional.of(b));
 
@@ -58,19 +51,15 @@ class BidListServiceTest {
                 .isEqualTo("acc");
     }
 
-    
-    
     @Test
     void findById_unknown_returnsEmpty() {
         when(repo.findById(99)).thenReturn(Optional.empty());
         assertThat(service.findById(99)).isEmpty();
     }
 
-    
-    
     @Test
     void save_persistsEntity() {
-        BidList bid = new BidList("acc", "type", 15.5);
+        BidList bid = new BidList("acc", "type", new BigDecimal("15.50"));
         when(repo.save(any(BidList.class))).thenAnswer(inv -> inv.getArgument(0));
 
         BidList saved = service.save(bid);
@@ -78,40 +67,34 @@ class BidListServiceTest {
         ArgumentCaptor<BidList> captor = ArgumentCaptor.forClass(BidList.class);
         verify(repo).save(captor.capture());
         assertThat(captor.getValue().getAccount()).isEqualTo("acc");
-        assertThat(saved.getBidQuantity()).isEqualTo(15.5);
+        assertThat(saved.getBidQuantity()).isEqualByComparingTo("15.50");
     }
 
-    
-    
     @Test
     void update_existing_updatesFields() {
-        BidList existing = new BidList("oldAcc", "oldType", 1.0);
+        BidList existing = new BidList("oldAcc", "oldType", new BigDecimal("1.00"));
         existing.setId(1);
         when(repo.findById(1)).thenReturn(Optional.of(existing));
         when(repo.save(any(BidList.class))).thenAnswer(inv -> inv.getArgument(0));
 
-        BidList toUpdate = new BidList("newAcc", "newType", 99.9);
+        BidList toUpdate = new BidList("newAcc", "newType", new BigDecimal("99.90"));
         BidList updated = service.update(1, toUpdate);
 
         assertThat(updated.getAccount()).isEqualTo("newAcc");
-        assertThat(updated.getBidQuantity()).isEqualTo(99.9);
+        assertThat(updated.getBidQuantity()).isEqualByComparingTo("99.90");
         verify(repo).save(existing);
     }
 
-    
-    
     @Test
     void update_unknownId_throws_andDoesNotSave() {
         when(repo.findById(999)).thenReturn(Optional.empty());
 
         assertThatThrownBy(() -> service.update(999, new BidList()))
-                .isInstanceOf(NoSuchElementException.class);
+                .isInstanceOf(IllegalArgumentException.class);
 
         verify(repo, never()).save(any());
     }
 
-    
-    
     @Test
     void deleteById_existing_deletes() {
         when(repo.existsById(1)).thenReturn(true);
@@ -119,14 +102,12 @@ class BidListServiceTest {
         verify(repo).deleteById(1);
     }
 
-    
-    
     @Test
     void deleteById_unknown_throws() {
         when(repo.existsById(123)).thenReturn(false);
 
         assertThatThrownBy(() -> service.deleteById(123))
-                .isInstanceOf(NoSuchElementException.class);
+                .isInstanceOf(IllegalArgumentException.class);
 
         verify(repo, never()).deleteById(anyInt());
     }

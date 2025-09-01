@@ -48,12 +48,13 @@ public class RatingServiceImpl implements RatingService {
     @Override
     public Rating update(Integer id, Rating rating) {
         Rating existing = repo.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("Rating introuvable id=" + id));
+                .orElseThrow(() -> new IllegalArgumentException("Rating introuvable id=" + id));
         // champs utilisés par les formulaires
         existing.setMoodysRating(rating.getMoodysRating());
         existing.setSandPRating(rating.getSandPRating());
         existing.setFitchRating(rating.getFitchRating());
         existing.setOrder(rating.getOrder());
+        
         return repo.save(existing);
     }
 
@@ -62,7 +63,7 @@ public class RatingServiceImpl implements RatingService {
     @Override
     public void deleteById(Integer id) {
         if (!repo.existsById(id)) {
-            throw new NoSuchElementException("Rating introuvable id=" + id);
+            throw new IllegalArgumentException("Rating introuvable id=" + id);
         }
         repo.deleteById(id);
     }

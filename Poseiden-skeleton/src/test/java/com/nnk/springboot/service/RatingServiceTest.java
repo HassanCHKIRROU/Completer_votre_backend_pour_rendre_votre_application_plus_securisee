@@ -97,7 +97,7 @@ class RatingServiceTest {
     void update_unknown_throws() {
         when(repo.findById(999)).thenReturn(Optional.empty());
         assertThatThrownBy(() -> service.update(999, new Rating()))
-                .isInstanceOf(NoSuchElementException.class);
+                .isInstanceOf(IllegalArgumentException.class);
         verify(repo, never()).save(any());
     }
 
@@ -116,7 +116,7 @@ class RatingServiceTest {
     void delete_unknown_throws() {
         when(repo.existsById(3)).thenReturn(false);
         assertThatThrownBy(() -> service.deleteById(3))
-                .isInstanceOf(NoSuchElementException.class);
+                .isInstanceOf(IllegalArgumentException.class);
         verify(repo, never()).deleteById(anyInt());
     }
 }

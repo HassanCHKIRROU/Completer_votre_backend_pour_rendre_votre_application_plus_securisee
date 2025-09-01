@@ -5,6 +5,7 @@
 <meta charset="utf-8"/>
 <title>Home</title>
 <link rel="stylesheet" href="../../css/bootstrap.min.css" >
+<link rel="stylesheet" th:href="@{/css/styles.css}">
 </head>
 <body>
 <div class="container">
@@ -14,7 +15,17 @@
 	</div>
 
 	<div class="row">
-		<form action="#" th:action="@{/curvePoint/validate}" th:object="${curvePoint}" method="post" class="form-horizontal" style="width: 100%">
+		<form action="#" th:action="@{/curvePoint/validate}"
+		 th:object="${curvePoint}" method="post" class="form-horizontal" style="width: 100%">
+			
+			<div class="form-group">
+							<label for="term" class="col-sm-2 control-label">CurveId</label>
+							<div class="col-sm-10">
+								<input type="value" th:field="*{value}" id="value" placeholder="value" class="col-4">
+								<p class="text-danger" th:if="${#fields.hasErrors('term')}" th:errors="*{term}"></p>
+							</div>
+						</div>
+			
 			<div class="form-group">
 				<label for="term" class="col-sm-2 control-label">Term</label>
 				<div class="col-sm-10">
@@ -40,5 +51,7 @@
 	</div>
 
 </div>
+<div th:replace="~{fragments/brand :: poseidonLogo}"></div>
+
 </body>
 </html>

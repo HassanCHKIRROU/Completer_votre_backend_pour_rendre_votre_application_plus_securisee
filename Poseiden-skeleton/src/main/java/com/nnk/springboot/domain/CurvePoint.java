@@ -3,46 +3,52 @@ package com.nnk.springboot.domain;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Digits;
+import java.math.BigDecimal;
 import java.sql.Timestamp;
 
 /**
- * Entité JPA pour la table curvepoint.
+ * Entité JPA pour la table CurvePoint (mapping conforme au script SQL).
  * Champs principaux utilisés dans les formulaires : term, value.
  */
 @Entity
-@Table(name = "curvepoint")
+@Table(name = "CurvePoint")
 public class CurvePoint {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "Id")
     private Integer id;
 
-    @Column(name = "curve_id")
+    @Column(name = "CurveId")
     private Integer curveId;
 
-    @Column(name = "as_of_date")
+    @Column(name = "asOfDate")
     private Timestamp asOfDate;
 
     @NotNull(message = "Term est obligatoire")
     @Positive(message = "Term doit être > 0")
-    @Column(nullable = false)
-    private Double term;
+    @Digits(integer = 20, fraction = 2, message = "Term invalide (max 20 chiffres, 2 décimales)")
+    @Column(name = "term", nullable = false, precision = 20, scale = 2)
+    private BigDecimal term;
 
     @NotNull(message = "Value est obligatoire")
-    @Column(nullable = false)
-    private Double value;
+    @Digits(integer = 20, fraction = 2, message = "Value invalide (max 20 chiffres, 2 décimales)")
+    @Column(name = "value", nullable = false, precision = 20, scale = 2)
+    private BigDecimal value;
 
-    @Column(name = "creation_date")
+    @Column(name = "creationDate")
     private Timestamp creationDate;
 
     public CurvePoint() {}
 
-    public CurvePoint(Double term, Double value) {
+    public CurvePoint(BigDecimal term, BigDecimal value) {
         this.term = term;
         this.value = value;
         this.creationDate = new Timestamp(System.currentTimeMillis());
     }
 
+    // Getters / Setters
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
@@ -52,11 +58,11 @@ public class CurvePoint {
     public Timestamp getAsOfDate() { return asOfDate; }
     public void setAsOfDate(Timestamp asOfDate) { this.asOfDate = asOfDate; }
 
-    public Double getTerm() { return term; }
-    public void setTerm(Double term) { this.term = term; }
+    public BigDecimal getTerm() { return term; }
+    public void setTerm(BigDecimal term) { this.term = term; }
 
-    public Double getValue() { return value; }
-    public void setValue(Double value) { this.value = value; }
+    public BigDecimal getValue() { return value; }
+    public void setValue(BigDecimal value) { this.value = value; }
 
     public Timestamp getCreationDate() { return creationDate; }
     public void setCreationDate(Timestamp creationDate) { this.creationDate = creationDate; }

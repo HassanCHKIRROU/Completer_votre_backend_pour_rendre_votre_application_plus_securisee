@@ -50,7 +50,7 @@ public class RuleNameServiceImpl implements RuleNameService {
     @Override
     public RuleName update(Integer id, RuleName rn) {
         RuleName existing = repo.findById(id)
-                .orElseThrow(() -> new NoSuchElementException("RuleName introuvable id=" + id));
+                .orElseThrow(() -> new IllegalArgumentException("RuleName introuvable id=" + id));
         existing.setName(rn.getName());
         existing.setDescription(rn.getDescription());
         existing.setJson(rn.getJson());
@@ -65,7 +65,7 @@ public class RuleNameServiceImpl implements RuleNameService {
     @Override
     public void deleteById(Integer id) {
         if (!repo.existsById(id)) {
-            throw new NoSuchElementException("RuleName introuvable id=" + id);
+            throw new IllegalArgumentException("RuleName introuvable id=" + id);
         }
         repo.deleteById(id);
     }
