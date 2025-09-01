@@ -9,19 +9,22 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-/** Implémentation simple du service Rating. */
+
+/** Implémentation des CRUD pour l'entité  Rating coté service. */
 @Service
 @Transactional
 public class RatingServiceImpl implements RatingService {
 
+	
     private final RatingRepository repo;
 
+    //Constructeur pour injecter le service
     public RatingServiceImpl(RatingRepository repo) {
         this.repo = repo;
     }
 
     
-    
+    //Récupère la liste de tous les Rating existants
     @Override
     @Transactional(readOnly = true)
     public List<Rating> findAll() {
@@ -29,7 +32,7 @@ public class RatingServiceImpl implements RatingService {
     }
 
     
-    
+    //Recherche un Rating par son identifiant
     @Override
     @Transactional(readOnly = true)
     public Optional<Rating> findById(Integer id) {
@@ -37,14 +40,14 @@ public class RatingServiceImpl implements RatingService {
     }
 
     
-    
+    //Sauvegarde un nouveau Rating ou met à jour un existant
     @Override
     public Rating save(Rating rating) {
         return repo.save(rating);
     }
 
     
-    
+    //Met à jour un Rating existant identifié par son id
     @Override
     public Rating update(Integer id, Rating rating) {
         Rating existing = repo.findById(id)
@@ -59,7 +62,7 @@ public class RatingServiceImpl implements RatingService {
     }
 
     
-    
+    //Supprimer un Rating identifié par son id
     @Override
     public void deleteById(Integer id) {
         if (!repo.existsById(id)) {

@@ -14,7 +14,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  * Configuration Spring Security (authentification par session-based).
  * <p>
  * - Utilise un PasswordEncoder BCrypt pour vérifier les mots de passe en base.
- * - Désactive CSRF (cadre pédagogique) : à n'activer qu'en production si nécessaire.
  * - Protège les routes : /user/** pour ADMIN, le reste authentifié, statiques/publics autorisés.
  * - Expose la page de login par défaut de Spring sur /login (GET) + /login (POST).
  * - Déconnecte via /app-logout (POST) avec invalidation de la session.
@@ -39,20 +38,18 @@ public class SecurityConfig {
     }
 
     
-    
-    
-    
+     
     
     /**
      * Construit la chaîne de filtres de sécurité.
      * <ul>
-     *   <li>CSRF désactivé (projet éducatif)</li>
+     *  
      *   <li>Autorisations HTTP configurées</li>
-     *   <li>Form login par défaut (/login), redirection succès → /bidList/list</li>
-     *   <li>Logout sur /app-logout (POST), redirection → /login?logout</li>
+     *   <li>Form login par défaut (/login), redirection succès vers /bidList/list</li>
+     *   <li>Logout sur /app-logout (POST), redirection vers /login?logout</li>
      * </ul>
      *
-     * @param http configuration HttpSecurity injectée par Spring
+     * @param http configuration:  HttpSecurity injectée par Spring
      * @return la {@link SecurityFilterChain} appliquée au contexte web
      * @throws Exception si la construction de la chaîne échoue
      */
@@ -60,9 +57,7 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-            // CSRF désactivé pour ce projet éducatif
-            .csrf(csrf -> csrf.disable())
-
+            
             .authorizeHttpRequests(registry -> registry
                 .requestMatchers("/", "/css/**", "/images/**").permitAll()
                 // on laisse /login géré par Spring Security (page par défaut)

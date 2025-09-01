@@ -12,17 +12,30 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+
+/**
+ * Tests unitaires de la classe TradeService.
+ * Cette classe teste les fonctionnalités CRUD du service Trade en utilisant Mockito
+ * pour simuler le repository et AssertJ pour les assertions.
+ */
 class TradeServiceTest {
 
     private TradeRepository repo;
     private TradeService service;
 
+    
+    //Configuration initiale avant chaque test
     @BeforeEach
     void setUp() {
         repo = mock(TradeRepository.class);
         service = new TradeServiceImpl(repo);
     }
 
+    
+    /*
+     * Teste la méthode findAll() lorsqu'elle retourne une liste de RuleName.
+     * Vérifie que la taille de la liste et les valeurs des noms sont correctes.
+     */
     @Test
     void findAll_returnsList() {
         when(repo.findAll()).thenReturn(List.of(
@@ -36,6 +49,11 @@ class TradeServiceTest {
                 .containsExactly("acc1", "acc2");
     }
 
+    
+    /*
+     * Teste la méthode findById() avec un ID existant.
+      * Vérifie que l'Optional contient une valeur pour un RuleName existant. 
+     */
     @Test
     void findById_existing_returnsValue() {
         Trade t = new Trade("acc", "type", new BigDecimal("10.00"));
@@ -45,12 +63,23 @@ class TradeServiceTest {
         assertThat(service.findById(7)).isPresent();
     }
 
+    
+    /*
+     * Teste la méthode findById() avec un ID inconnu.
+     * Vérifie que l'Optional retourné est vide pour un ID inexistant
+     */
     @Test
     void findById_unknown_returnsEmpty() {
         when(repo.findById(77)).thenReturn(Optional.empty());
         assertThat(service.findById(77)).isEmpty();
     }
 
+    
+    /*
+     * Teste la méthode save() pour vérifier qu'elle persiste correctement l'entité.
+     * Vérifie que la méthode save du repository est appelée et que les attributs 
+     * de l'objet retourné sont corrects (particulièrement le champ sqlPart)
+     */
     @Test
     void save_persistsEntity() {
         Trade t = new Trade("acc", "type", new BigDecimal("15.00"));
@@ -61,6 +90,11 @@ class TradeServiceTest {
         assertThat(saved.getBuyQuantity()).isEqualByComparingTo("15.00");
     }
 
+    
+    /*
+     * Teste la méthode update() avec un ID existant.
+     * Vérifie que tous les champs (name, description, json, template, sql, sqlPart) sont correctement mis à jour. 
+     */
     @Test
     void update_existing_updatesFields() {
         Trade existing = new Trade("oldAcc", "oldType", new BigDecimal("1.00"));
@@ -77,6 +111,11 @@ class TradeServiceTest {
         verify(repo).save(existing);
     }
 
+    
+    /*
+     * Teste la méthode update() avec un id inconnu.
+     * Vérifie qu'une IllegalArgumentException est levée et que save() n'est jamais appelé
+     */
     @Test
     void update_unknown_throws() {
         when(repo.findById(999)).thenReturn(Optional.empty());
@@ -85,6 +124,11 @@ class TradeServiceTest {
         verify(repo, never()).save(any());
     }
 
+    
+    /*
+     * Teste la méthode deleteById() avec un ID existant.
+     * Vérifie que deleteById() est appelé sur le repository avec le bon ID
+     */
     @Test
     void delete_existing_ok() {
         when(repo.existsById(2)).thenReturn(true);
@@ -92,6 +136,11 @@ class TradeServiceTest {
         verify(repo).deleteById(2);
     }
 
+    
+    /*
+     * Teste la méthode deleteById() avec un ID inconnu.
+     * Vérifie qu'une IllegalArgumentException est levée et que deleteById() n'est jamais appelé
+     */
     @Test
     void delete_unknown_throws() {
         when(repo.existsById(3)).thenReturn(false);

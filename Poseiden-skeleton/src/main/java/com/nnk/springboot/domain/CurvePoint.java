@@ -15,39 +15,52 @@ import java.sql.Timestamp;
 @Table(name = "CurvePoint")
 public class CurvePoint {
 
+	
+	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
     private Integer id;
 
+    
     @Column(name = "CurveId")
     private Integer curveId;
 
+    
     @Column(name = "asOfDate")
     private Timestamp asOfDate;
 
+    
     @NotNull(message = "Term est obligatoire")
     @Positive(message = "Term doit être > 0")
     @Digits(integer = 20, fraction = 2, message = "Term invalide (max 20 chiffres, 2 décimales)")
     @Column(name = "term", nullable = false, precision = 20, scale = 2)
     private BigDecimal term;
 
+    
     @NotNull(message = "Value est obligatoire")
     @Digits(integer = 20, fraction = 2, message = "Value invalide (max 20 chiffres, 2 décimales)")
     @Column(name = "value", nullable = false, precision = 20, scale = 2)
     private BigDecimal value;
 
+    
     @Column(name = "creationDate")
     private Timestamp creationDate;
 
+    
+    
+    //Constructeur par defaut
     public CurvePoint() {}
-
-    public CurvePoint(BigDecimal term, BigDecimal value) {
-        this.term = term;
+ 
+    //Constructeur avec parametres
+    public CurvePoint(Integer curveId, BigDecimal term, BigDecimal value) {
+        this.curveId = curveId;
+    	this.term = term;
         this.value = value;
         this.creationDate = new Timestamp(System.currentTimeMillis());
     }
 
+    
     // Getters / Setters
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }

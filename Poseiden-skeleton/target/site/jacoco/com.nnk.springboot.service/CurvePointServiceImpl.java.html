@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CurvePointServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-skeleton</a> &gt; <a href="index.source.html" class="el_package">com.nnk.springboot.service</a> &gt; <span class="el_source">CurvePointServiceImpl.java</span></div><h1>CurvePointServiceImpl.java</h1><pre class="source lang-java linenums">package com.nnk.springboot.service;
+
+
+import com.nnk.springboot.domain.CurvePoint;
+import com.nnk.springboot.repositories.CurvePointRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
+
+/** Implémentation du service pour la gestion des CRUD de  l'entité CurvePoint. */
+@Service
+@Transactional
+public class CurvePointServiceImpl implements CurvePointService {
+	
+
+	
+    private final CurvePointRepository repo;
+
+    //Constructeur pour injecter le repository
+<span class="fc" id="L24">    public CurvePointServiceImpl(CurvePointRepository repo) {</span>
+<span class="fc" id="L25">        this.repo = repo;</span>
+<span class="fc" id="L26">    }</span>
+
+    
+    //Récupère la liste de tous les CurvePoint existants.
+    @Override
+    @Transactional(readOnly = true)
+    public List&lt;CurvePoint&gt; findAll() {
+<span class="fc" id="L33">        return repo.findAll();</span>
+    }
+
+    
+    //Recherche un CurvePoint par son identifiant.
+    @Override
+    @Transactional(readOnly = true)
+    public Optional&lt;CurvePoint&gt; findById(Integer id) {
+<span class="fc" id="L41">        return repo.findById(id);</span>
+    }
+
+    
+   
+    //Sauvegarde un nouveau CurvePoint ou met à jour un existant
+    @Override
+    public CurvePoint save(CurvePoint curvePoint) {
+<span class="fc" id="L49">        return repo.save(curvePoint);</span>
+    }
+
+    
+    
+    //Met à jour un CurvePoint existant identifié par son id.
+    @Override
+    public CurvePoint update(Integer id, CurvePoint cp) {
+<span class="fc" id="L57">        CurvePoint existing = repo.findById(id)</span>
+<span class="fc" id="L58">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;CurvePoint introuvable id=&quot; + id));</span>
+        
+        // Les formulaires ne modifient que term &amp; value ; on met à jour ces champs
+<span class="fc" id="L61">        existing.setTerm(cp.getTerm());</span>
+<span class="fc" id="L62">        existing.setValue(cp.getValue());</span>
+        // Si tu veux gérer d'autres champs (curveId, asOfDate), ajoute-les ici :
+<span class="fc" id="L64">         existing.setCurveId(cp.getCurveId());</span>
+        // existing.setAsOfDate(cp.getAsOfDate());
+<span class="fc" id="L66">        return repo.save(existing);</span>
+    }
+
+    
+    
+    //Supprime un CurvePoint par son identifiant.
+    @Override
+    public void deleteById(Integer id) {
+<span class="fc bfc" id="L74" title="All 2 branches covered.">        if (!repo.existsById(id)) {</span>
+<span class="fc" id="L75">            throw new IllegalArgumentException(&quot;CurvePoint introuvable id=&quot; + id);</span>
+        }
+<span class="fc" id="L77">        repo.deleteById(id);</span>
+<span class="fc" id="L78">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

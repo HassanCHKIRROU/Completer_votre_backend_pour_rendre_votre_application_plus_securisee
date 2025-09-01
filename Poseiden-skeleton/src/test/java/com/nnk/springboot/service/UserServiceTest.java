@@ -13,12 +13,20 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
+
+/**
+ * Tests unitaires de la classe UserService.
+ * Cette classe teste les fonctionnalités CRUD du service User en utilisant Mockito
+ * pour simuler le repository et l'encodeur de mots de passe, et AssertJ pour les assertions.
+ */
 class UserServiceTest {
 
     private UserRepository repo;
     private PasswordEncoder encoder;
     private UserService service;
 
+    
+    //Configuration initiale avant chaque test
     @BeforeEach
     void setUp() {
         repo = mock(UserRepository.class);
@@ -26,6 +34,11 @@ class UserServiceTest {
         service = new UserServiceImpl(repo, encoder);
     }
 
+    
+    /*
+     * Teste la méthode findAll() lorsqu'elle retourne une liste d'utilisateurs.
+     * Vérifie que la taille de la liste et les noms d'utilisateur sont corrects.
+     */
     @Test
     void findAll_returnsList() {
         when(repo.findAll()).thenReturn(List.of(
@@ -39,6 +52,11 @@ class UserServiceTest {
                 .containsExactly("u1", "u2");
     }
 
+    
+    /*
+     * Teste la méthode findById() avec un ID existant.
+     * Vérifie que l'Optional contient une valeur pour un utilisateur existant.
+     */
     @Test
     void findById_existing_returnsValue() {
         User u = buildUser(10, "user");
@@ -47,12 +65,22 @@ class UserServiceTest {
         assertThat(service.findById(10)).isPresent();
     }
 
+    
+    /*
+     * Teste la méthode findById() avec un ID inconnu.
+     * Vérifie que l'Optional retourné est vide pour un ID inexistant.
+     */
     @Test
     void findById_unknown_returnsEmpty() {
         when(repo.findById(5)).thenReturn(Optional.empty());
         assertThat(service.findById(5)).isEmpty();
     }
 
+    
+    /*
+     * Teste la méthode findByUsername() qui délègue au repository.
+     * Vérifie que l'Optional retourné contient le bon utilisateur.
+     */
     @Test
     void findByUsername_delegatesToRepo_andWrapsOptional() {
         User u = buildUser(1, "john");
@@ -65,6 +93,11 @@ class UserServiceTest {
                 .isEqualTo("john");
     }
 
+    
+    /*
+     * Teste la méthode save() pour vérifier qu'elle encode le mot de passe
+     * et persiste l'entité avec le mot de passe chiffré.
+     */
     @Test
     void save_encodesPassword_andPersists() {
         User u = new User();
@@ -83,6 +116,11 @@ class UserServiceTest {
         assertThat(saved.getPassword()).isEqualTo("ENCODED");
     }
 
+    
+    /*
+     * Teste la méthode update() avec un ID existant et un nouveau mot de passe.
+     * Vérifie que tous les champs sont mis à jour et que le mot de passe est encodé
+     */
     @Test
     void update_existing_updatesAndEncodesIfProvided() {
         User existing = buildUser(1, "old");
@@ -106,6 +144,11 @@ class UserServiceTest {
         verify(repo).save(existing);
     }
 
+    
+    /*
+     * Teste la méthode update() avec un mot de passe vide.
+     * Vérifie que le mot de passe existant est conservé et qu'aucun encodage n'est effectué.
+     */
     @Test
     void update_existing_doesNotChangePassword_whenBlank() {
         User existing = buildUser(1, "user");
@@ -126,6 +169,11 @@ class UserServiceTest {
         verify(repo).save(existing);
     }
 
+    
+    /*
+     * Teste la méthode update() avec un ID inconnu.
+     * Vérifie qu'une IllegalArgumentException est levée et que save() n'est jamais appelé.
+     */
     @Test
     void update_unknown_throws() {
         when(repo.findById(404)).thenReturn(Optional.empty());
@@ -134,6 +182,11 @@ class UserServiceTest {
         verify(repo, never()).save(any());
     }
 
+    
+    /*
+     * Teste la méthode deleteById() avec un ID existant.
+     * Vérifie que deleteById() est appelé sur le repository avec le bon ID.
+     */
     @Test
     void delete_existing_ok() {
         when(repo.existsById(2)).thenReturn(true);
@@ -141,6 +194,11 @@ class UserServiceTest {
         verify(repo).deleteById(2);
     }
 
+    
+    /*
+     * Teste la méthode deleteById() avec un ID inconnu.
+     * Vérifie qu'une IllegalArgumentException est levée et que deleteById() n'est jamais appelé.
+     */
     @Test
     void delete_unknown_throws() {
         when(repo.existsById(3)).thenReturn(false);
@@ -150,6 +208,13 @@ class UserServiceTest {
     }
 
     // helper
+    /**
+     * Méthode helper pour construire un objet User de test.
+     * 
+     * @param id l'identifiant de l'utilisateur
+     * @param username le nom d'utilisateur
+     * @return un objet User configuré pour les tests
+     */
     private static User buildUser(Integer id, String username) {
         User u = new User();
         u.setId(id);

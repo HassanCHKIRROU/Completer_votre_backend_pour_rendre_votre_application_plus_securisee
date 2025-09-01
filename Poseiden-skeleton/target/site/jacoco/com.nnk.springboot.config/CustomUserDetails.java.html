@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CustomUserDetails.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-skeleton</a> &gt; <a href="index.source.html" class="el_package">com.nnk.springboot.config</a> &gt; <span class="el_source">CustomUserDetails.java</span></div><h1>CustomUserDetails.java</h1><pre class="source lang-java linenums">package com.nnk.springboot.config;
+
+import com.nnk.springboot.domain.User;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
+
+/**
+ * Adaptateur entre l'entité {@link com.nnk.springboot.domain.User} et
+ * l'interface {@link org.springframework.security.core.userdetails.UserDetails}
+ * attendue par Spring Security.
+ * 
+ * Les rôles applicatifs &quot;ADMIN&quot;/&quot;USER&quot; sont normalisés en autorités &quot;ROLE_ADMIN&quot;/&quot;ROLE_USER&quot;.
+ */
+public class CustomUserDetails implements UserDetails {
+
+	
+	
+    private final User user;
+    
+    //Constructeur pour injecter le repo
+<span class="nc" id="L25">    public CustomUserDetails(User u) {</span>
+<span class="nc" id="L26">        this.user = u;</span>
+<span class="nc" id="L27">    }</span>
+
+    
+
+    /**
+     * Retourne la collection d'autorisations de l'utilisateur.
+     * Si l'attribut {@code role} ne commence pas par &quot;ROLE_&quot;, le préfixe est ajouté.
+     *
+     * @return une liste contenant l'autorité principale de l'utilisateur
+     */
+    
+    @Override
+    public Collection&lt;? extends GrantedAuthority&gt; getAuthorities() {
+        // attend des rôles &quot;ROLE_USER&quot;, &quot;ROLE_ADMIN&quot;
+<span class="nc" id="L41">        String role = user.getRole();</span>
+<span class="nc bnc" id="L42" title="All 2 branches missed.">        String normalized = role.startsWith(&quot;ROLE_&quot;) ? role : &quot;ROLE_&quot; + role;</span>
+<span class="nc" id="L43">        return List.of(new SimpleGrantedAuthority(normalized));</span>
+    }
+
+    
+    
+    /**
+     * Implémentation de l'interface UserDetails pour fournir les informations d'authentification
+     * @return le mot de passe de l'utilisateur
+     */
+    @Override public String getPassword() {
+<span class="nc" id="L53">    	return user.getPassword();</span>
+    }
+    
+    
+    /**
+     * Retourne le nom d'utilisateur utilisé pour l'authentification
+     * 
+     * @return le nom d'utilisateur de l'utilisateur
+     */
+    @Override public String getUsername() {
+<span class="nc" id="L63">    	return user.getUsername();</span>
+    }
+    
+    
+    
+    /**
+     * Indique si le compte de l'utilisateur n'a pas expiré
+     * 
+     * @return true si le compte n'est pas expiré, false sinon
+     */
+    @Override public boolean isAccountNonExpired() {
+<span class="nc" id="L74">    	return true;</span>
+    }
+    
+    
+    
+    /**
+     * Indique si le compte de l'utilisateur n'est pas verrouillé
+     * 
+     * @return true si le compte n'est pas verrouillé, false sinon
+     */
+    @Override public boolean isAccountNonLocked() {
+<span class="nc" id="L85">    	return true; </span>
+    }
+    
+    
+    
+    /**
+     * Indique si les credentials de l'utilisateur n'ont pas expiré
+     * 
+     * @return true si les credentials ne sont pas expirés, false sinon
+     */
+    @Override public boolean isCredentialsNonExpired() {
+<span class="nc" id="L96">    	return true; </span>
+    }
+   
+    
+    
+    /**
+     * Indique si le compte de l'utilisateur est activé
+     * 
+     * @return true si le compte est activé, false sinon
+     */
+    @Override public boolean isEnabled() { 
+<span class="nc" id="L107">    	return true;</span>
+    }
+
+    
+    
+    /**
+     * Retourne l'objet User du domaine métier
+     * 
+     * @return l'instance User représentant l'utilisateur métier
+     */
+    public User getDomainUser() {
+<span class="nc" id="L118">    	return user;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BidList.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-skeleton</a> &gt; <a href="index.source.html" class="el_package">com.nnk.springboot.domain</a> &gt; <span class="el_source">BidList.java</span></div><h1>BidList.java</h1><pre class="source lang-java linenums">package com.nnk.springboot.domain;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.*;
+import java.math.BigDecimal;
+
+/**
+ * Entité JPA pour la table BidList.
+ * Compatible avec le script SQL et les templates Thymeleaf.
+ */
+@Entity
+@Table(name = &quot;BidList&quot;)
+public class BidList {
+
+	
+	
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = &quot;BidListId&quot;) // PK dans le script SQL
+    private Integer id;
+
+    
+    @NotBlank(message = &quot;Account est obligatoire&quot;)
+    @Column(name = &quot;account&quot;, nullable = false, length = 30)
+    private String account;
+
+    
+    @NotBlank(message = &quot;Type est obligatoire&quot;)
+    @Column(name = &quot;type&quot;, nullable = false, length = 30)
+    private String type;
+
+    
+    @NotNull(message = &quot;Bid Quantity est obligatoire&quot;)
+    @Positive(message = &quot;Bid Quantity doit être &gt; 0&quot;)
+    @Digits(integer = 20, fraction = 2, message = &quot;Bid Quantity invalide (max 20 chiffres, 2 décimales)&quot;)
+    @Column(name = &quot;bidQuantity&quot;, nullable = false, precision = 20, scale = 2) // Aligné avec DECIMAL(20,2)
+    private BigDecimal bidQuantity;
+
+    
+    
+    // Constructeur par défaut
+<span class="fc" id="L42">    public BidList() {}</span>
+
+    // Constructeur avec les parametres
+<span class="fc" id="L45">    public BidList(String account, String type, BigDecimal bidQuantity) {</span>
+<span class="fc" id="L46">        this.account = account;</span>
+<span class="fc" id="L47">        this.type = type;</span>
+<span class="fc" id="L48">        this.bidQuantity = bidQuantity;</span>
+<span class="fc" id="L49">    }</span>
+
+    
+    
+    // Getters / Setters
+<span class="nc" id="L54">    public Integer getId() { return id; }</span>
+<span class="fc" id="L55">    public void setId(Integer id) { this.id = id; }</span>
+
+<span class="fc" id="L57">    public String getAccount() { return account; }</span>
+<span class="fc" id="L58">    public void setAccount(String account) { this.account = account; }</span>
+
+<span class="fc" id="L60">    public String getType() { return type; }</span>
+<span class="fc" id="L61">    public void setType(String type) { this.type = type; }</span>
+
+<span class="fc" id="L63">    public BigDecimal getBidQuantity() { return bidQuantity; }</span>
+<span class="fc" id="L64">    public void setBidQuantity(BigDecimal bidQuantity) { this.bidQuantity = bidQuantity; }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

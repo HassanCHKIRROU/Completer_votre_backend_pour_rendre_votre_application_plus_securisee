@@ -10,20 +10,23 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-/** Implémentation simple du service CurvePoint. */
+
+/** Implémentation du service pour la gestion des CRUD de  l'entité CurvePoint. */
 @Service
 @Transactional
 public class CurvePointServiceImpl implements CurvePointService {
 	
 
+	
     private final CurvePointRepository repo;
 
+    //Constructeur pour injecter le repository
     public CurvePointServiceImpl(CurvePointRepository repo) {
         this.repo = repo;
     }
 
     
-    
+    //Récupère la liste de tous les CurvePoint existants.
     @Override
     @Transactional(readOnly = true)
     public List<CurvePoint> findAll() {
@@ -31,6 +34,7 @@ public class CurvePointServiceImpl implements CurvePointService {
     }
 
     
+    //Recherche un CurvePoint par son identifiant.
     @Override
     @Transactional(readOnly = true)
     public Optional<CurvePoint> findById(Integer id) {
@@ -38,7 +42,8 @@ public class CurvePointServiceImpl implements CurvePointService {
     }
 
     
-    
+   
+    //Sauvegarde un nouveau CurvePoint ou met à jour un existant
     @Override
     public CurvePoint save(CurvePoint curvePoint) {
         return repo.save(curvePoint);
@@ -46,6 +51,7 @@ public class CurvePointServiceImpl implements CurvePointService {
 
     
     
+    //Met à jour un CurvePoint existant identifié par son id.
     @Override
     public CurvePoint update(Integer id, CurvePoint cp) {
         CurvePoint existing = repo.findById(id)
@@ -55,13 +61,14 @@ public class CurvePointServiceImpl implements CurvePointService {
         existing.setTerm(cp.getTerm());
         existing.setValue(cp.getValue());
         // Si tu veux gérer d'autres champs (curveId, asOfDate), ajoute-les ici :
-        // existing.setCurveId(cp.getCurveId());
+         existing.setCurveId(cp.getCurveId());
         // existing.setAsOfDate(cp.getAsOfDate());
         return repo.save(existing);
     }
 
     
     
+    //Supprime un CurvePoint par son identifiant.
     @Override
     public void deleteById(Integer id) {
         if (!repo.existsById(id)) {

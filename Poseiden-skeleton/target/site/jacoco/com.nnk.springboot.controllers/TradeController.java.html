@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TradeController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-skeleton</a> &gt; <a href="index.source.html" class="el_package">com.nnk.springboot.controllers</a> &gt; <span class="el_source">TradeController.java</span></div><h1>TradeController.java</h1><pre class="source lang-java linenums">package com.nnk.springboot.controllers;
+
+import com.nnk.springboot.domain.Trade;
+import com.nnk.springboot.service.TradeService;
+import jakarta.validation.Valid;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
+
+/**
+ * Contrôleur MVC pour Trade : liste, ajout, mise à jour, suppression.
+ */
+@Controller
+public class TradeController {
+
+	
+    private final TradeService service;
+
+<span class="nc" id="L22">    public TradeController(TradeService service) {</span>
+<span class="nc" id="L23">        this.service = service;</span>
+<span class="nc" id="L24">    }</span>
+
+    
+    
+    /** Met à disposition le nom de l'utilisateur connecté pour toutes les vues de ce contrôleur */
+    
+    @ModelAttribute(&quot;principalName&quot;)
+    public String principalName(Principal principal) {
+<span class="nc bnc" id="L32" title="All 2 branches missed.">        return principal != null ? principal.getName() : &quot;anonymous&quot;;</span>
+    }
+
+    
+    
+    /** GET /trade/list : affiche la liste des trades */
+    
+    @GetMapping(&quot;/trade/list&quot;)
+    public String home(Model model) {
+<span class="nc" id="L41">        model.addAttribute(&quot;trades&quot;, service.findAll());</span>
+<span class="nc" id="L42">        return &quot;trade/list&quot;;</span>
+    }
+
+    
+    
+    /** GET /trade/add : formulaire d'ajout */
+    
+    @GetMapping(&quot;/trade/add&quot;)
+    public String addUser(Trade trade) {
+<span class="nc" id="L51">        return &quot;trade/add&quot;;</span>
+    }
+
+    
+    
+    /** POST /trade/validate : valider et enregistrer */
+    
+    @PostMapping(&quot;/trade/validate&quot;)
+    public String validate(@Valid Trade trade, BindingResult result) {
+<span class="nc bnc" id="L60" title="All 2 branches missed.">        if (result.hasErrors()) {</span>
+<span class="nc" id="L61">            return &quot;trade/add&quot;;</span>
+        }
+<span class="nc" id="L63">        service.save(trade);</span>
+<span class="nc" id="L64">        return &quot;redirect:/trade/list&quot;;</span>
+    }
+
+    
+    
+    /** GET /trade/update/{id} : pré-remplir le formulaire */
+    
+    @GetMapping(&quot;/trade/update/{id}&quot;)
+    public String showUpdateForm(@PathVariable(&quot;id&quot;) Integer id, Model model) {
+<span class="nc" id="L73">        Trade t = service.findById(id)</span>
+<span class="nc" id="L74">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Invalid Trade Id: &quot; + id));</span>
+<span class="nc" id="L75">        model.addAttribute(&quot;trade&quot;, t);</span>
+<span class="nc" id="L76">        return &quot;trade/update&quot;;</span>
+    }
+
+    
+    
+    /** POST /trade/update/{id} : valider et mettre à jour */
+    
+    @PostMapping(&quot;/trade/update/{id}&quot;)
+    public String updateTrade(@PathVariable(&quot;id&quot;) Integer id,
+                              @Valid Trade trade,
+                              BindingResult result) {
+<span class="nc bnc" id="L87" title="All 2 branches missed.">        if (result.hasErrors()) {</span>
+<span class="nc" id="L88">            trade.setId(id); // s'assurer que l'ID est conservé dans le form</span>
+<span class="nc" id="L89">            return &quot;trade/update&quot;;</span>
+        }
+<span class="nc" id="L91">        service.update(id, trade);</span>
+<span class="nc" id="L92">        return &quot;redirect:/trade/list&quot;;</span>
+    }
+
+    
+    
+    /** GET /trade/delete/{id} : supprimer puis revenir à la liste */
+    
+    @GetMapping(&quot;/trade/delete/{id}&quot;)
+    public String deleteTrade(@PathVariable(&quot;id&quot;) Integer id) {
+<span class="nc" id="L101">        service.deleteById(id);</span>
+<span class="nc" id="L102">        return &quot;redirect:/trade/list&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

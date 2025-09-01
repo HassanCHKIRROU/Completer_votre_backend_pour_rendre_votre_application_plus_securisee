@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>CurvePoint.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-skeleton</a> &gt; <a href="index.source.html" class="el_package">com.nnk.springboot.domain</a> &gt; <span class="el_source">CurvePoint.java</span></div><h1>CurvePoint.java</h1><pre class="source lang-java linenums">package com.nnk.springboot.domain;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Digits;
+import java.math.BigDecimal;
+import java.sql.Timestamp;
+
+/**
+ * Entité JPA pour la table CurvePoint (mapping conforme au script SQL).
+ * Champs principaux utilisés dans les formulaires : term, value.
+ */
+@Entity
+@Table(name = &quot;CurvePoint&quot;)
+public class CurvePoint {
+
+	
+	
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = &quot;Id&quot;)
+    private Integer id;
+
+    
+    @Column(name = &quot;CurveId&quot;)
+    private Integer curveId;
+
+    
+    @Column(name = &quot;asOfDate&quot;)
+    private Timestamp asOfDate;
+
+    
+    @NotNull(message = &quot;Term est obligatoire&quot;)
+    @Positive(message = &quot;Term doit être &gt; 0&quot;)
+    @Digits(integer = 20, fraction = 2, message = &quot;Term invalide (max 20 chiffres, 2 décimales)&quot;)
+    @Column(name = &quot;term&quot;, nullable = false, precision = 20, scale = 2)
+    private BigDecimal term;
+
+    
+    @NotNull(message = &quot;Value est obligatoire&quot;)
+    @Digits(integer = 20, fraction = 2, message = &quot;Value invalide (max 20 chiffres, 2 décimales)&quot;)
+    @Column(name = &quot;value&quot;, nullable = false, precision = 20, scale = 2)
+    private BigDecimal value;
+
+    
+    @Column(name = &quot;creationDate&quot;)
+    private Timestamp creationDate;
+
+    
+    
+    //Constructeur par defaut
+<span class="fc" id="L53">    public CurvePoint() {}</span>
+ 
+    //Constructeur avec parametres
+<span class="fc" id="L56">    public CurvePoint(Integer curveId, BigDecimal term, BigDecimal value) {</span>
+<span class="fc" id="L57">        this.curveId = curveId;</span>
+<span class="fc" id="L58">    	this.term = term;</span>
+<span class="fc" id="L59">        this.value = value;</span>
+<span class="fc" id="L60">        this.creationDate = new Timestamp(System.currentTimeMillis());</span>
+<span class="fc" id="L61">    }</span>
+
+    
+    // Getters / Setters
+<span class="nc" id="L65">    public Integer getId() { return id; }</span>
+<span class="fc" id="L66">    public void setId(Integer id) { this.id = id; }</span>
+
+<span class="fc" id="L68">    public Integer getCurveId() { return curveId; }</span>
+<span class="fc" id="L69">    public void setCurveId(Integer curveId) { this.curveId = curveId; }</span>
+
+<span class="nc" id="L71">    public Timestamp getAsOfDate() { return asOfDate; }</span>
+<span class="nc" id="L72">    public void setAsOfDate(Timestamp asOfDate) { this.asOfDate = asOfDate; }</span>
+
+<span class="fc" id="L74">    public BigDecimal getTerm() { return term; }</span>
+<span class="fc" id="L75">    public void setTerm(BigDecimal term) { this.term = term; }</span>
+
+<span class="fc" id="L77">    public BigDecimal getValue() { return value; }</span>
+<span class="fc" id="L78">    public void setValue(BigDecimal value) { this.value = value; }</span>
+
+<span class="nc" id="L80">    public Timestamp getCreationDate() { return creationDate; }</span>
+<span class="nc" id="L81">    public void setCreationDate(Timestamp creationDate) { this.creationDate = creationDate; }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>BidListServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-skeleton</a> &gt; <a href="index.source.html" class="el_package">com.nnk.springboot.service</a> &gt; <span class="el_source">BidListServiceImpl.java</span></div><h1>BidListServiceImpl.java</h1><pre class="source lang-java linenums">package com.nnk.springboot.service;
+
+import com.nnk.springboot.domain.BidList;
+import com.nnk.springboot.repositories.BidListRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
+
+/** Implémentation des CRUD pour l'entité BidList coté service . */
+@Service
+@Transactional
+public class BidListServiceImpl implements BidListService {
+
+	
+	
+    private final BidListRepository repo;
+
+    //Constructeur pour injecter le repository
+<span class="fc" id="L23">    public BidListServiceImpl(BidListRepository repo) {</span>
+<span class="fc" id="L24">        this.repo = repo;</span>
+<span class="fc" id="L25">    }</span>
+
+    
+    //Récupère la liste de tous les BidList existants.
+    @Override
+    @Transactional(readOnly = true)
+    public List&lt;BidList&gt; findAll() {
+<span class="fc" id="L32">        return repo.findAll();</span>
+    }
+
+    
+    //Recherche un BidList par son identifiant Id
+    @Override
+    @Transactional(readOnly = true)
+    public Optional&lt;BidList&gt; findById(Integer id) {
+<span class="fc" id="L40">        return repo.findById(id);</span>
+    }
+
+    
+    //Sauvegarde un nouveau BidList ou met à jour un existant
+    @Override
+    public BidList save(BidList bid) {
+<span class="fc" id="L47">        return repo.save(bid);</span>
+    }
+
+    
+    //Met à jour un BidList existant identifié par son id.
+    @Override
+    public BidList update(Integer id, BidList bid) {
+<span class="fc" id="L54">        BidList existing = repo.findById(id)</span>
+<span class="fc" id="L55">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;BidList introuvable id=&quot; + id));</span>
+        // On met à jour uniquement les champs éditables depuis le formulaire
+<span class="fc" id="L57">        existing.setAccount(bid.getAccount());</span>
+<span class="fc" id="L58">        existing.setType(bid.getType());</span>
+<span class="fc" id="L59">        existing.setBidQuantity(bid.getBidQuantity());</span>
+        // On garantit l'id
+<span class="fc" id="L61">        existing.setId(id);</span>
+<span class="fc" id="L62">        return repo.save(existing);</span>
+    }
+
+    
+    //Supprime un BidList par son identifiant Id
+    @Override
+    public void deleteById(Integer id) {
+<span class="fc bfc" id="L69" title="All 2 branches covered.">        if (!repo.existsById(id)) {</span>
+<span class="fc" id="L70">            throw new IllegalArgumentException(&quot;BidList introuvable id=&quot; + id);</span>
+        }
+<span class="fc" id="L72">        repo.deleteById(id);</span>
+<span class="fc" id="L73">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

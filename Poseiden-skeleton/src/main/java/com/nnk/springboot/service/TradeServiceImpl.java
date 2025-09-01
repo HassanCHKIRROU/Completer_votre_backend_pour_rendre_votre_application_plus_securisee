@@ -10,20 +10,22 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 
-/** Implémentation simple du service Trade. */
+/** Implémentation des CRUD de l'entité  Trade coté service. */
 @Service
 @Transactional
 public class TradeServiceImpl implements TradeService {
 	
+	
 
     private final TradeRepository repo;
 
+    //Constructeur pour injecter le repo.
     public TradeServiceImpl(TradeRepository repo) {
         this.repo = repo;
     }
 
     
-    
+    //Récupère tous les Trades existants
     @Override
     @Transactional(readOnly = true)
     public List<Trade> findAll() {
@@ -31,7 +33,7 @@ public class TradeServiceImpl implements TradeService {
     }
 
     
-    
+    //Recherche un Trade par son id.
     @Override
     @Transactional(readOnly = true)
     public Optional<Trade> findById(Integer id) {
@@ -39,14 +41,14 @@ public class TradeServiceImpl implements TradeService {
     }
 
     
-    
+    //Sauvegarde un nouveau Trade ou met à jour un existant
     @Override
     public Trade save(Trade trade) {
         return repo.save(trade);
     }
 
     
-    
+    //Mettre à jour un trade identifié par son id.
     @Override
     public Trade update(Integer id, Trade t) {
         Trade existing = repo.findById(id)
@@ -80,7 +82,7 @@ public class TradeServiceImpl implements TradeService {
     }
 
     
-    
+    //Supprimer un Trade identifié par son id 
     @Override
     public void deleteById(Integer id) {
         if (!repo.existsById(id)) {

@@ -12,13 +12,18 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-
+/**
+ * Tests unitaires de la classe RuleNameService.
+ * Cette classe teste les fonctionnalités CRUD du service RuleName en utilisant Mockito
+ * pour simuler le repository et AssertJ pour les assertions.
+ */
 class RuleNameServiceTest {
 
     private RuleNameRepository repo;
     private RuleNameService service;
 
     
+    //Configuration initiale avant chaque test
     @BeforeEach
     void setUp() {
         repo = mock(RuleNameRepository.class);
@@ -26,7 +31,10 @@ class RuleNameServiceTest {
     }
 
     
-    
+    /*
+     * Teste la méthode findAll() lorsqu'elle retourne une liste de RuleName.
+     * Vérifie que la taille de la liste et les valeurs des noms sont correctes.
+     */
     @Test
     void findAll_returnsList() {
         when(repo.findAll()).thenReturn(List.of(
@@ -41,7 +49,10 @@ class RuleNameServiceTest {
     }
 
     
-    
+   /*
+    * Teste la méthode findById() avec un ID existant.
+     * Vérifie que l'Optional contient une valeur pour un RuleName existant. 
+    */
     @Test
     void findById_existing_returnsValue() {
         RuleName r = new RuleName("n", "d", "j", "t", "s", "sp");
@@ -52,7 +63,10 @@ class RuleNameServiceTest {
     }
 
     
-    
+    /*
+     * Teste la méthode findById() avec un ID inconnu.
+     * Vérifie que l'Optional retourné est vide pour un ID inexistant
+     */
     @Test
     void findById_unknown_returnsEmpty() {
         when(repo.findById(9)).thenReturn(Optional.empty());
@@ -60,7 +74,11 @@ class RuleNameServiceTest {
     }
 
     
-    
+    /*
+     * Teste la méthode save() pour vérifier qu'elle persiste correctement l'entité.
+     * Vérifie que la méthode save du repository est appelée et que les attributs
+     * de l'objet retourné sont corrects (particulièrement le champ sqlPart).
+     */
     @Test
     void save_persistsEntity() {
         RuleName r = new RuleName("n", "d", "j", "t", "s", "sp");
@@ -72,7 +90,10 @@ class RuleNameServiceTest {
     }
 
     
-    
+    /*
+     * Teste la méthode update() avec un ID existant.
+     * Vérifie que tous les champs (name, description, json, template, sql, sqlPart) sont correctement mis à jour. 
+     */
     @Test
     void update_existing_updatesFields() {
         RuleName existing = new RuleName("n0", "d0", "j0", "t0", "s0", "sp0");
@@ -93,7 +114,10 @@ class RuleNameServiceTest {
     }
 
     
-    
+    /*
+     * Teste la méthode update() avec un id inconnu.
+     * Vérifie qu'une IllegalArgumentException est levée et que save() n'est jamais appelé
+     */
     @Test
     void update_unknown_throws() {
         when(repo.findById(404)).thenReturn(Optional.empty());
@@ -103,7 +127,10 @@ class RuleNameServiceTest {
     }
 
     
-    
+    /*
+     * Teste la méthode deleteById() avec un ID existant.
+     * Vérifie que deleteById() est appelé sur le repository avec le bon ID
+     */
     @Test
     void delete_existing_ok() {
         when(repo.existsById(2)).thenReturn(true);
@@ -112,7 +139,10 @@ class RuleNameServiceTest {
     }
 
     
-    
+    /*
+     * Teste la méthode deleteById() avec un ID inconnu.
+     * Vérifie qu'une IllegalArgumentException est levée et que deleteById() n'est jamais appelé
+     */
     @Test
     void delete_unknown_throws() {
         when(repo.existsById(3)).thenReturn(false);

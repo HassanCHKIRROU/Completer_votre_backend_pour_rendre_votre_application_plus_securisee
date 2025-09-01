@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RatingServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-skeleton</a> &gt; <a href="index.source.html" class="el_package">com.nnk.springboot.service</a> &gt; <span class="el_source">RatingServiceImpl.java</span></div><h1>RatingServiceImpl.java</h1><pre class="source lang-java linenums">package com.nnk.springboot.service;
+
+import com.nnk.springboot.domain.Rating;
+import com.nnk.springboot.repositories.RatingRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
+
+/** Implémentation des CRUD pour l'entité  Rating coté service. */
+@Service
+@Transactional
+public class RatingServiceImpl implements RatingService {
+
+	
+    private final RatingRepository repo;
+
+    //Constructeur pour injecter le service
+<span class="fc" id="L22">    public RatingServiceImpl(RatingRepository repo) {</span>
+<span class="fc" id="L23">        this.repo = repo;</span>
+<span class="fc" id="L24">    }</span>
+
+    
+    //Récupère la liste de tous les Rating existants
+    @Override
+    @Transactional(readOnly = true)
+    public List&lt;Rating&gt; findAll() {
+<span class="fc" id="L31">        return repo.findAll();</span>
+    }
+
+    
+    //Recherche un Rating par son identifiant
+    @Override
+    @Transactional(readOnly = true)
+    public Optional&lt;Rating&gt; findById(Integer id) {
+<span class="fc" id="L39">        return repo.findById(id);</span>
+    }
+
+    
+    //Sauvegarde un nouveau Rating ou met à jour un existant
+    @Override
+    public Rating save(Rating rating) {
+<span class="fc" id="L46">        return repo.save(rating);</span>
+    }
+
+    
+    //Met à jour un Rating existant identifié par son id
+    @Override
+    public Rating update(Integer id, Rating rating) {
+<span class="fc" id="L53">        Rating existing = repo.findById(id)</span>
+<span class="fc" id="L54">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Rating introuvable id=&quot; + id));</span>
+        // champs utilisés par les formulaires
+<span class="fc" id="L56">        existing.setMoodysRating(rating.getMoodysRating());</span>
+<span class="fc" id="L57">        existing.setSandPRating(rating.getSandPRating());</span>
+<span class="fc" id="L58">        existing.setFitchRating(rating.getFitchRating());</span>
+<span class="fc" id="L59">        existing.setOrder(rating.getOrder());</span>
+        
+<span class="fc" id="L61">        return repo.save(existing);</span>
+    }
+
+    
+    //Supprimer un Rating identifié par son id
+    @Override
+    public void deleteById(Integer id) {
+<span class="fc bfc" id="L68" title="All 2 branches covered.">        if (!repo.existsById(id)) {</span>
+<span class="fc" id="L69">            throw new IllegalArgumentException(&quot;Rating introuvable id=&quot; + id);</span>
+        }
+<span class="fc" id="L71">        repo.deleteById(id);</span>
+<span class="fc" id="L72">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

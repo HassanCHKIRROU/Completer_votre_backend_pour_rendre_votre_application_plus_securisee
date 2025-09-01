@@ -14,15 +14,19 @@ import jakarta.validation.constraints.Size;
 @Table(name = "Users")
 public class User {
 
+	
+	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id") // PK conforme au script
     private Integer id;
 
+    
     @NotBlank(message = "Username is mandatory")
     @Column(name = "username", nullable = false, unique = true, length = 125)
     private String username;
 
+    
     @NotBlank(message = "Password is mandatory")
     @Size(min = 8, message = "Password must be at least 8 characters")
     @Pattern(
@@ -32,16 +36,22 @@ public class User {
     @Column(name = "password", nullable = false, length = 125) // 125 selon le script, 60 suffisent pour BCrypt
     private String password;
 
+    
     @NotBlank(message = "FullName is mandatory")
     @Column(name = "fullname", nullable = false, length = 125)
     private String fullname;
 
+    
     @NotBlank(message = "Role is mandatory")
     @Column(name = "role", nullable = false, length = 125)
     private String role;
 
+    
+    
+    //Constructeur par defaut
     public User() {}
 
+    
     // Getters / Setters
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }

@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>Trade.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-skeleton</a> &gt; <a href="index.source.html" class="el_package">com.nnk.springboot.domain</a> &gt; <span class="el_source">Trade.java</span></div><h1>Trade.java</h1><pre class="source lang-java linenums">package com.nnk.springboot.domain;
+
+import jakarta.persistence.*;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Digits;
+import java.sql.Timestamp;
+import java.math.BigDecimal;
+
+/**
+ * Entité JPA pour la table Trade (mapping conforme au script SQL).
+ * Les formulaires Thymeleaf utilisent surtout account, type et buyQuantity.
+ */
+@Entity
+@Table(name = &quot;Trade&quot;)
+public class Trade {
+
+	
+	
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = &quot;TradeId&quot;) // PK exacte selon le script
+    private Integer id;
+
+    
+    @NotBlank(message = &quot;Account est obligatoire&quot;)
+    @Column(name = &quot;account&quot;, nullable = false, length = 30)
+    private String account;
+
+    
+    @NotBlank(message = &quot;Type est obligatoire&quot;)
+    @Column(name = &quot;type&quot;, nullable = false, length = 30)
+    private String type;
+
+    
+    @NotNull(message = &quot;Buy Quantity est obligatoire&quot;)
+    @Positive(message = &quot;Buy Quantity doit être &gt; 0&quot;)
+    @Digits(integer = 20, fraction = 2, message = &quot;Buy Quantity invalide (max 20 chiffres, 2 décimales)&quot;)
+    @Column(name = &quot;buyQuantity&quot;, precision = 20, scale = 2)
+    private BigDecimal buyQuantity;
+
+    
+    @Column(name = &quot;sellQuantity&quot;, precision = 20, scale = 2)
+    private BigDecimal sellQuantity;
+
+    
+    @Column(name = &quot;buyPrice&quot;, precision = 20, scale = 2)
+    private BigDecimal buyPrice;
+
+    
+    @Column(name = &quot;sellPrice&quot;, precision = 20, scale = 2)
+    private BigDecimal sellPrice;
+
+    
+    @Column(name = &quot;benchmark&quot;)
+    private String benchmark;
+
+    
+    @Column(name = &quot;tradeDate&quot;)
+    private Timestamp tradeDate;
+
+    
+    @Column(name = &quot;security&quot;)
+    private String security;
+
+    
+    @Column(name = &quot;status&quot;, length = 10)
+    private String status;
+
+    
+    @Column(name = &quot;trader&quot;)
+    private String trader;
+
+    
+    @Column(name = &quot;book&quot;)
+    private String book;
+
+    
+    @Column(name = &quot;creationName&quot;)
+    private String creationName;
+
+    
+    @Column(name = &quot;creationDate&quot;)
+    private Timestamp creationDate;
+
+    
+    @Column(name = &quot;revisionName&quot;)
+    private String revisionName;
+
+    
+    @Column(name = &quot;revisionDate&quot;)
+    private Timestamp revisionDate;
+
+    
+    @Column(name = &quot;dealName&quot;)
+    private String dealName;
+
+    
+    @Column(name = &quot;dealType&quot;)
+    private String dealType;
+
+    
+    @Column(name = &quot;sourceListId&quot;)
+    private String sourceListId;
+
+    
+    @Column(name = &quot;side&quot;)
+    private String side;
+
+    
+    //Constructeur par defaut
+<span class="fc" id="L113">    public Trade() {}</span>
+
+    
+    //Constructeur parametré
+<span class="fc" id="L117">    public Trade(String account, String type, BigDecimal buyQuantity) {</span>
+<span class="fc" id="L118">        this.account = account;</span>
+<span class="fc" id="L119">        this.type = type;</span>
+<span class="fc" id="L120">        this.buyQuantity = buyQuantity;</span>
+<span class="fc" id="L121">    }</span>
+
+    
+    
+    //  Getters &amp; Setters
+<span class="nc" id="L126">    public Integer getId() { return id; }</span>
+<span class="fc" id="L127">    public void setId(Integer id) { this.id = id; }</span>
+
+    // Alias pour compatibilité avec les templates (trade.tradeId)
+<span class="nc" id="L130">    public Integer getTradeId() { return id; }</span>
+<span class="nc" id="L131">    public void setTradeId(Integer tradeId) { this.id = tradeId; }</span>
+
+<span class="fc" id="L133">    public String getAccount() { return account; }</span>
+<span class="fc" id="L134">    public void setAccount(String account) { this.account = account; }</span>
+
+<span class="fc" id="L136">    public String getType() { return type; }</span>
+<span class="fc" id="L137">    public void setType(String type) { this.type = type; }</span>
+
+<span class="fc" id="L139">    public BigDecimal getBuyQuantity() { return buyQuantity; }</span>
+<span class="fc" id="L140">    public void setBuyQuantity(BigDecimal buyQuantity) { this.buyQuantity = buyQuantity; }</span>
+
+<span class="nc" id="L142">    public BigDecimal getSellQuantity() { return sellQuantity; }</span>
+<span class="nc" id="L143">    public void setSellQuantity(BigDecimal sellQuantity) { this.sellQuantity = sellQuantity; }</span>
+
+<span class="nc" id="L145">    public BigDecimal getBuyPrice() { return buyPrice; }</span>
+<span class="nc" id="L146">    public void setBuyPrice(BigDecimal buyPrice) { this.buyPrice = buyPrice; }</span>
+
+<span class="nc" id="L148">    public BigDecimal getSellPrice() { return sellPrice; }</span>
+<span class="nc" id="L149">    public void setSellPrice(BigDecimal sellPrice) { this.sellPrice = sellPrice; }</span>
+
+<span class="nc" id="L151">    public String getBenchmark() { return benchmark; }</span>
+<span class="nc" id="L152">    public void setBenchmark(String benchmark) { this.benchmark = benchmark; }</span>
+
+<span class="nc" id="L154">    public Timestamp getTradeDate() { return tradeDate; }</span>
+<span class="nc" id="L155">    public void setTradeDate(Timestamp tradeDate) { this.tradeDate = tradeDate; }</span>
+
+<span class="nc" id="L157">    public String getSecurity() { return security; }</span>
+<span class="nc" id="L158">    public void setSecurity(String security) { this.security = security; }</span>
+
+<span class="nc" id="L160">    public String getStatus() { return status; }</span>
+<span class="nc" id="L161">    public void setStatus(String status) { this.status = status; }</span>
+
+<span class="nc" id="L163">    public String getTrader() { return trader; }</span>
+<span class="nc" id="L164">    public void setTrader(String trader) { this.trader = trader; }</span>
+
+<span class="nc" id="L166">    public String getBook() { return book; }</span>
+<span class="nc" id="L167">    public void setBook(String book) { this.book = book; }</span>
+
+<span class="nc" id="L169">    public String getCreationName() { return creationName; }</span>
+<span class="nc" id="L170">    public void setCreationName(String creationName) { this.creationName = creationName; }</span>
+
+<span class="nc" id="L172">    public Timestamp getCreationDate() { return creationDate; }</span>
+<span class="nc" id="L173">    public void setCreationDate(Timestamp creationDate) { this.creationDate = creationDate; }</span>
+
+<span class="nc" id="L175">    public String getRevisionName() { return revisionName; }</span>
+<span class="nc" id="L176">    public void setRevisionName(String revisionName) { this.revisionName = revisionName; }</span>
+
+<span class="nc" id="L178">    public Timestamp getRevisionDate() { return revisionDate; }</span>
+<span class="nc" id="L179">    public void setRevisionDate(Timestamp revisionDate) { this.revisionDate = revisionDate; }</span>
+
+<span class="nc" id="L181">    public String getDealName() { return dealName; }</span>
+<span class="nc" id="L182">    public void setDealName(String dealName) { this.dealName = dealName; }</span>
+
+<span class="nc" id="L184">    public String getDealType() { return dealType; }</span>
+<span class="nc" id="L185">    public void setDealType(String dealType) { this.dealType = dealType; }</span>
+
+<span class="nc" id="L187">    public String getSourceListId() { return sourceListId; }</span>
+<span class="nc" id="L188">    public void setSourceListId(String sourceListId) { this.sourceListId = sourceListId; }</span>
+
+<span class="nc" id="L190">    public String getSide() { return side; }</span>
+<span class="nc" id="L191">    public void setSide(String side) { this.side = side; }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

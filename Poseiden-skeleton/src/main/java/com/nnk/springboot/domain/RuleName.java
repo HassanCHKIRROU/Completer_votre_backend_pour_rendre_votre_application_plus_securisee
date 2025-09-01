@@ -11,37 +11,49 @@ import jakarta.validation.constraints.NotBlank;
 @Table(name = "RuleName")
 public class RuleName {
 
+	
+	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "Id")
     private Integer id;
 
+    
     @NotBlank(message = "Name est obligatoire")
     @Column(name = "name")
     private String name;
 
+    
     @NotBlank(message = "Description est obligatoire")
     @Column(name = "description")
     private String description;
 
+    
     @NotBlank(message = "Json est obligatoire")
     @Column(name = "json")
     private String json;
 
+    
     @NotBlank(message = "Template est obligatoire")
     @Column(name = "template", length = 512)
     private String template;
 
+    
     @NotBlank(message = "SQL est obligatoire")
     @Column(name = "sqlStr")   
     private String sql;        
 
+    
     @NotBlank(message = "SQL Part est obligatoire")
     @Column(name = "sqlPart")
     private String sqlPart;
 
+    
+    //Constructeur par defaut
     public RuleName() {}
 
+    
+    //Constructeur avec parametres
     public RuleName(String name, String description, String json, String template, String sql, String sqlPart) {
         this.name = name;
         this.description = description;
@@ -51,6 +63,8 @@ public class RuleName {
         this.sqlPart = sqlPart;
     }
 
+    
+    //Getters / Setters
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 

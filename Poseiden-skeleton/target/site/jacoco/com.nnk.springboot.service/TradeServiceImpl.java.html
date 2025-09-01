@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>TradeServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-skeleton</a> &gt; <a href="index.source.html" class="el_package">com.nnk.springboot.service</a> &gt; <span class="el_source">TradeServiceImpl.java</span></div><h1>TradeServiceImpl.java</h1><pre class="source lang-java linenums">package com.nnk.springboot.service;
+
+import com.nnk.springboot.domain.Trade;
+import com.nnk.springboot.repositories.TradeRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
+
+/** Implémentation des CRUD de l'entité  Trade coté service. */
+@Service
+@Transactional
+public class TradeServiceImpl implements TradeService {
+	
+	
+
+    private final TradeRepository repo;
+
+    //Constructeur pour injecter le repo.
+<span class="fc" id="L23">    public TradeServiceImpl(TradeRepository repo) {</span>
+<span class="fc" id="L24">        this.repo = repo;</span>
+<span class="fc" id="L25">    }</span>
+
+    
+    //Récupère tous les Trades existants
+    @Override
+    @Transactional(readOnly = true)
+    public List&lt;Trade&gt; findAll() {
+<span class="fc" id="L32">        return repo.findAll();</span>
+    }
+
+    
+    //Recherche un Trade par son id.
+    @Override
+    @Transactional(readOnly = true)
+    public Optional&lt;Trade&gt; findById(Integer id) {
+<span class="fc" id="L40">        return repo.findById(id);</span>
+    }
+
+    
+    //Sauvegarde un nouveau Trade ou met à jour un existant
+    @Override
+    public Trade save(Trade trade) {
+<span class="fc" id="L47">        return repo.save(trade);</span>
+    }
+
+    
+    //Mettre à jour un trade identifié par son id.
+    @Override
+    public Trade update(Integer id, Trade t) {
+<span class="fc" id="L54">        Trade existing = repo.findById(id)</span>
+<span class="fc" id="L55">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Trade introuvable id=&quot; + id));</span>
+
+        // Champs manipulés par les formulaires
+<span class="fc" id="L58">        existing.setAccount(t.getAccount());</span>
+<span class="fc" id="L59">        existing.setType(t.getType());</span>
+<span class="fc" id="L60">        existing.setBuyQuantity(t.getBuyQuantity());</span>
+
+        // Si besoin d'autres champs :
+        // existing.setSellQuantity(t.getSellQuantity());
+        // existing.setBuyPrice(t.getBuyPrice());
+        // existing.setSellPrice(t.getSellPrice());
+        // existing.setBenchmark(t.getBenchmark());
+        // existing.setTradeDate(t.getTradeDate());
+        // existing.setSecurity(t.getSecurity());
+        // existing.setStatus(t.getStatus());
+        // existing.setTrader(t.getTrader());
+        // existing.setBook(t.getBook());
+        // existing.setCreationName(t.getCreationName());
+        // existing.setCreationDate(t.getCreationDate());
+        // existing.setRevisionName(t.getRevisionName());
+        // existing.setRevisionDate(t.getRevisionDate());
+        // existing.setDealName(t.getDealName());
+        // existing.setDealType(t.getDealType());
+        // existing.setSourceListId(t.getSourceListId());
+        // existing.setSide(t.getSide());
+
+<span class="fc" id="L81">        return repo.save(existing);</span>
+    }
+
+    
+    //Supprimer un Trade identifié par son id 
+    @Override
+    public void deleteById(Integer id) {
+<span class="fc bfc" id="L88" title="All 2 branches covered.">        if (!repo.existsById(id)) {</span>
+<span class="fc" id="L89">            throw new IllegalArgumentException(&quot;Trade introuvable id=&quot; + id);</span>
+        }
+<span class="fc" id="L91">        repo.deleteById(id);</span>
+<span class="fc" id="L92">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

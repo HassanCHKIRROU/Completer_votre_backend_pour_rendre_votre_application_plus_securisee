@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RuleNameController.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-skeleton</a> &gt; <a href="index.source.html" class="el_package">com.nnk.springboot.controllers</a> &gt; <span class="el_source">RuleNameController.java</span></div><h1>RuleNameController.java</h1><pre class="source lang-java linenums">package com.nnk.springboot.controllers;
+
+import com.nnk.springboot.domain.RuleName;
+import com.nnk.springboot.service.RuleNameService;
+import jakarta.validation.Valid;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
+
+import java.security.Principal;
+
+/**
+ * Contrôleur MVC pour RuleName : liste, ajout, mise à jour, suppression.
+ */
+@Controller
+public class RuleNameController {
+
+	
+	
+    private final RuleNameService service;
+
+<span class="nc" id="L23">    public RuleNameController(RuleNameService service) {</span>
+<span class="nc" id="L24">        this.service = service;</span>
+<span class="nc" id="L25">    }</span>
+
+    
+    
+    /** Met à disposition le nom de l'utilisateur connecté pour toutes les vues de ce contrôleur */
+    
+    @ModelAttribute(&quot;principalName&quot;)
+    public String principalName(Principal principal) {
+<span class="nc bnc" id="L33" title="All 2 branches missed.">        return principal != null ? principal.getName() : &quot;anonymous&quot;;</span>
+    }
+
+    
+    
+    /** GET /ruleName/list : affiche la liste des règles */
+    
+    @GetMapping(&quot;/ruleName/list&quot;)
+    public String home(Model model) {
+<span class="nc" id="L42">        model.addAttribute(&quot;ruleNames&quot;, service.findAll());</span>
+<span class="nc" id="L43">        return &quot;ruleName/list&quot;;</span>
+    }
+
+    
+    
+    /** GET /ruleName/add : formulaire d'ajout */
+    
+    @GetMapping(&quot;/ruleName/add&quot;)
+    public String addRuleForm(RuleName ruleName) {
+<span class="nc" id="L52">        return &quot;ruleName/add&quot;;</span>
+    }
+
+    
+    
+    /** POST /ruleName/validate : valider et enregistrer */
+    
+    @PostMapping(&quot;/ruleName/validate&quot;)
+    public String validate(@Valid RuleName ruleName, BindingResult result) {
+<span class="nc bnc" id="L61" title="All 2 branches missed.">        if (result.hasErrors()) {</span>
+<span class="nc" id="L62">            return &quot;ruleName/add&quot;;</span>
+        }
+<span class="nc" id="L64">        service.save(ruleName);</span>
+<span class="nc" id="L65">        return &quot;redirect:/ruleName/list&quot;;</span>
+    }
+
+    
+    
+    /** GET /ruleName/update/{id} : pré-remplir le formulaire */
+    
+    @GetMapping(&quot;/ruleName/update/{id}&quot;)
+    public String showUpdateForm(@PathVariable(&quot;id&quot;) Integer id, Model model) {
+<span class="nc" id="L74">        RuleName rn = service.findById(id)</span>
+<span class="nc" id="L75">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;Invalid RuleName Id: &quot; + id));</span>
+<span class="nc" id="L76">        model.addAttribute(&quot;ruleName&quot;, rn);</span>
+<span class="nc" id="L77">        return &quot;ruleName/update&quot;;</span>
+    }
+
+    
+    
+    /** POST /ruleName/update/{id} : valider et mettre à jour */
+    
+    @PostMapping(&quot;/ruleName/update/{id}&quot;)
+    public String updateRuleName(@PathVariable(&quot;id&quot;) Integer id,
+                                 @Valid RuleName ruleName,
+                                 BindingResult result) {
+<span class="nc bnc" id="L88" title="All 2 branches missed.">        if (result.hasErrors()) {</span>
+<span class="nc" id="L89">            ruleName.setId(id); // garder l'ID dans le formulaire</span>
+<span class="nc" id="L90">            return &quot;ruleName/update&quot;;</span>
+        }
+<span class="nc" id="L92">        service.update(id, ruleName);</span>
+<span class="nc" id="L93">        return &quot;redirect:/ruleName/list&quot;;</span>
+    }
+
+    
+    
+    /** GET /ruleName/delete/{id} : supprimer puis revenir à la liste */
+    
+    @GetMapping(&quot;/ruleName/delete/{id}&quot;)
+    public String deleteRuleName(@PathVariable(&quot;id&quot;) Integer id) {
+<span class="nc" id="L102">        service.deleteById(id);</span>
+<span class="nc" id="L103">        return &quot;redirect:/ruleName/list&quot;;</span>
+    }
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

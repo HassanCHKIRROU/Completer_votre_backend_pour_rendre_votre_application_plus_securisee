@@ -12,13 +12,19 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-
+/**
+ * Tests unitaires de la classe RatingService.
+ * Cette classe teste les fonctionnalités CRUD du service Rating en utilisant Mockito
+ * pour simuler le repository et AssertJ pour les assertions.
+ */
 class RatingServiceTest {
 
+	
     private RatingRepository repo;
     private RatingService service;
 
-    
+ 
+    //Configuration initiale avant chaque test
     @BeforeEach
     void setUp() {
         repo = mock(RatingRepository.class);
@@ -26,7 +32,10 @@ class RatingServiceTest {
     }
 
     
-    
+    /*
+     * Teste la méthode findAll() lorsqu'elle retourne une liste de Rating.
+     * Vérifie que la taille de la liste et les valeurs des orders sont correctes.
+     */
     @Test
     void findAll_returnsList() {
         when(repo.findAll()).thenReturn(List.of(
@@ -41,7 +50,10 @@ class RatingServiceTest {
     }
 
     
-    
+    /*
+     * Teste la méthode findById() avec un ID existant.
+     * Vérifie que l'Optional contient une valeur pour un Rating existant.
+     */
     @Test
     void findById_existing_returnsValue() {
         Rating r = new Rating("M", "S", "F", 10);
@@ -52,7 +64,10 @@ class RatingServiceTest {
     }
 
     
-    
+    /*
+     * Teste la méthode findById() avec un ID inconnu.
+     * Vérifie que l'Optional retourné est vide pour un ID inexistant.
+     */
     @Test
     void findById_unknown_returnsEmpty() {
         when(repo.findById(77)).thenReturn(Optional.empty());
@@ -60,7 +75,10 @@ class RatingServiceTest {
     }
 
   
-    
+    /*
+     * Teste la méthode save() pour vérifier qu'elle persiste correctement l'entité.
+     * Vérifie que la méthode save du repository est appelée et que les attributs de l'objet retourné sont corrects. 
+     */
     @Test
     void save_persistsEntity() {
         Rating r = new Rating("M", "S", "F", 10);
@@ -73,7 +91,10 @@ class RatingServiceTest {
     }
 
     
-    
+    /*
+     * Teste la méthode update() avec un ID existant.
+     * Vérifie que tous les champs (Moody's, SandP, Fitch, Order) sont correctement mis à jour.
+     */
     @Test
     void update_existing_updatesFields() {
         Rating existing = new Rating("M0", "S0", "F0", 0);
@@ -92,7 +113,10 @@ class RatingServiceTest {
     }
 
     
-    
+    /*
+     * Teste la méthode update() avec un ID inconnu.
+     * Vérifie qu'une IllegalArgumentException est levée et que save() n'est jamais appelé.
+     */
     @Test
     void update_unknown_throws() {
         when(repo.findById(999)).thenReturn(Optional.empty());
@@ -102,7 +126,10 @@ class RatingServiceTest {
     }
 
     
-    
+    /*
+     * Teste la méthode deleteById() avec un ID existant.
+     * Vérifie que deleteById() est appelé sur le repository avec le bon id
+     */
     @Test
     void delete_existing_ok() {
         when(repo.existsById(2)).thenReturn(true);
@@ -111,7 +138,10 @@ class RatingServiceTest {
     }
 
     
-    
+   /*
+    * Teste la méthode deleteById() avec un ID inconnu.
+    * Vérifie qu'une IllegalArgumentException est levée et que deleteById() n'est jamais appelé. 
+    */
     @Test
     void delete_unknown_throws() {
         when(repo.existsById(3)).thenReturn(false);

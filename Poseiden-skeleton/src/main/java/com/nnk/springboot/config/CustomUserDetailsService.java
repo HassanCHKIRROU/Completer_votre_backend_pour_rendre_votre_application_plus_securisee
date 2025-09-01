@@ -7,18 +7,20 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 /**
- * {@code UserDetailsService} chargé de récupérer un utilisateur applicatif
+ * {@code UserDetailsService} chargé de récupérer un utilisateur 
  * depuis la base de données à partir de son {@code username}.
  * <p>
- * Utilisé par Spring Security pendant l'authentification (form login).
+ * Utilisé par Spring Security pendant l'authentification .
  */
 
 @Service
 public class CustomUserDetailsService implements UserDetailsService {
 	
+    
 
     private final UserRepository repo;
-
+  
+    //Constructeur pour injecter le repository
     public CustomUserDetailsService(UserRepository repo) {
         this.repo = repo;
     }

@@ -16,85 +16,113 @@ import java.math.BigDecimal;
 @Table(name = "Trade")
 public class Trade {
 
+	
+	
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "TradeId") // PK exacte selon le script
     private Integer id;
 
+    
     @NotBlank(message = "Account est obligatoire")
     @Column(name = "account", nullable = false, length = 30)
     private String account;
 
+    
     @NotBlank(message = "Type est obligatoire")
     @Column(name = "type", nullable = false, length = 30)
     private String type;
 
+    
     @NotNull(message = "Buy Quantity est obligatoire")
     @Positive(message = "Buy Quantity doit être > 0")
     @Digits(integer = 20, fraction = 2, message = "Buy Quantity invalide (max 20 chiffres, 2 décimales)")
     @Column(name = "buyQuantity", precision = 20, scale = 2)
     private BigDecimal buyQuantity;
 
+    
     @Column(name = "sellQuantity", precision = 20, scale = 2)
     private BigDecimal sellQuantity;
 
+    
     @Column(name = "buyPrice", precision = 20, scale = 2)
     private BigDecimal buyPrice;
 
+    
     @Column(name = "sellPrice", precision = 20, scale = 2)
     private BigDecimal sellPrice;
 
+    
     @Column(name = "benchmark")
     private String benchmark;
 
+    
     @Column(name = "tradeDate")
     private Timestamp tradeDate;
 
+    
     @Column(name = "security")
     private String security;
 
+    
     @Column(name = "status", length = 10)
     private String status;
 
+    
     @Column(name = "trader")
     private String trader;
 
+    
     @Column(name = "book")
     private String book;
 
+    
     @Column(name = "creationName")
     private String creationName;
 
+    
     @Column(name = "creationDate")
     private Timestamp creationDate;
 
+    
     @Column(name = "revisionName")
     private String revisionName;
 
+    
     @Column(name = "revisionDate")
     private Timestamp revisionDate;
 
+    
     @Column(name = "dealName")
     private String dealName;
 
+    
     @Column(name = "dealType")
     private String dealType;
 
+    
     @Column(name = "sourceListId")
     private String sourceListId;
 
+    
     @Column(name = "side")
     private String side;
 
+    
+    //Constructeur par defaut
     public Trade() {}
 
+    
+    //Constructeur parametré
     public Trade(String account, String type, BigDecimal buyQuantity) {
         this.account = account;
         this.type = type;
         this.buyQuantity = buyQuantity;
     }
 
-    // --- Getters & Setters ---
+    
+    
+    //  Getters & Setters
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 

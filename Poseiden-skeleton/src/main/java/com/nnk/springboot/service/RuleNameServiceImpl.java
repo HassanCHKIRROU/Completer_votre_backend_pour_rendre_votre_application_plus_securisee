@@ -10,20 +10,22 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 
-/** Implémentation simple du service RuleName. */
+/** Implémentation des CRUD pour l'entité RuleName coté service. */
 @Service
 @Transactional
 public class RuleNameServiceImpl implements RuleNameService {
 	
+	
 
     private final RuleNameRepository repo;
 
+    //Constructeur pour injecter le service
     public RuleNameServiceImpl(RuleNameRepository repo) {
         this.repo = repo;
     }
 
     
-    
+    //Recupère la liste de tous les RuleName existants
     @Override
     @Transactional(readOnly = true)
     public List<RuleName> findAll() {
@@ -31,7 +33,7 @@ public class RuleNameServiceImpl implements RuleNameService {
     }
 
     
-    
+    //Recherche un RulName par son identifiant
     @Override
     @Transactional(readOnly = true)
     public Optional<RuleName> findById(Integer id) {
@@ -39,14 +41,14 @@ public class RuleNameServiceImpl implements RuleNameService {
     }
 
     
-    
+    //Enregistrer un nouveau RuleName ou met à joir un existant
     @Override
     public RuleName save(RuleName ruleName) {
         return repo.save(ruleName);
     }
 
     
-    
+    //Mettre à jour un RuleName identifié par son id
     @Override
     public RuleName update(Integer id, RuleName rn) {
         RuleName existing = repo.findById(id)
@@ -61,7 +63,7 @@ public class RuleNameServiceImpl implements RuleNameService {
     }
 
     
-    
+    //Supprimer un ruleName identifié par son id.
     @Override
     public void deleteById(Integer id) {
         if (!repo.existsById(id)) {

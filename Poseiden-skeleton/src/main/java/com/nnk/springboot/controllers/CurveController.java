@@ -16,32 +16,46 @@ import java.security.Principal;
 @Controller
 public class CurveController {
 
+	
+	
     private final CurvePointService service;
 
     public CurveController(CurvePointService service) {
         this.service = service;
     }
 
+    
+    
     /** Injecte le nom de l'utilisateur pour toutes les vues de ce contrôleur */
+    
     @ModelAttribute("principalName")
     public String principalName(Principal principal) {
         return principal != null ? principal.getName() : "anonymous";
     }
 
+    
+    
     /** GET /curvePoint/list : affiche la liste */
+    
     @GetMapping("/curvePoint/list")
     public String home(Model model) {
         model.addAttribute("curvePoints", service.findAll());
         return "curvePoint/list";
     }
 
+    
+    
     /** GET /curvePoint/add : formulaire d'ajout */
+    
     @GetMapping("/curvePoint/add")
     public String addForm(CurvePoint curvePoint) {
         return "curvePoint/add";
     }
 
+    
+    
     /** POST /curvePoint/validate : valider et enregistrer */
+    
     @PostMapping("/curvePoint/validate")
     public String validate(@Valid CurvePoint curvePoint, BindingResult result) {
         if (result.hasErrors()) {
@@ -51,7 +65,10 @@ public class CurveController {
         return "redirect:/curvePoint/list";
     }
 
+    
+    
     /** GET /curvePoint/update/{id} : pré-remplir le formulaire */
+    
     @GetMapping("/curvePoint/update/{id}")
     public String showUpdateForm(@PathVariable("id") Integer id, Model model) {
         CurvePoint cp = service.findById(id)
@@ -60,7 +77,10 @@ public class CurveController {
         return "curvePoint/update";
     }
 
+    
+    
     /** POST /curvePoint/update/{id} : valider et mettre à jour */
+    
     @PostMapping("/curvePoint/update/{id}")
     public String update(@PathVariable("id") Integer id,
                          @Valid CurvePoint curvePoint,
@@ -73,7 +93,10 @@ public class CurveController {
         return "redirect:/curvePoint/list";
     }
 
+    
+    
     /** GET /curvePoint/delete/{id} : supprimer puis revenir à la liste */
+    
     @GetMapping("/curvePoint/delete/{id}")
     public String delete(@PathVariable("id") Integer id) {
         service.deleteById(id);

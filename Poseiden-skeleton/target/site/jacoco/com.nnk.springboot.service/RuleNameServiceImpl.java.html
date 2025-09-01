@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>RuleNameServiceImpl.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-skeleton</a> &gt; <a href="index.source.html" class="el_package">com.nnk.springboot.service</a> &gt; <span class="el_source">RuleNameServiceImpl.java</span></div><h1>RuleNameServiceImpl.java</h1><pre class="source lang-java linenums">package com.nnk.springboot.service;
+
+import com.nnk.springboot.domain.RuleName;
+import com.nnk.springboot.repositories.RuleNameRepository;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
+
+
+/** Implémentation des CRUD pour l'entité RuleName coté service. */
+@Service
+@Transactional
+public class RuleNameServiceImpl implements RuleNameService {
+	
+	
+
+    private final RuleNameRepository repo;
+
+    //Constructeur pour injecter le service
+<span class="fc" id="L23">    public RuleNameServiceImpl(RuleNameRepository repo) {</span>
+<span class="fc" id="L24">        this.repo = repo;</span>
+<span class="fc" id="L25">    }</span>
+
+    
+    //Recupère la liste de tous les RuleName existants
+    @Override
+    @Transactional(readOnly = true)
+    public List&lt;RuleName&gt; findAll() {
+<span class="fc" id="L32">        return repo.findAll();</span>
+    }
+
+    
+    //Recherche un RulName par son identifiant
+    @Override
+    @Transactional(readOnly = true)
+    public Optional&lt;RuleName&gt; findById(Integer id) {
+<span class="fc" id="L40">        return repo.findById(id);</span>
+    }
+
+    
+    //Enregistrer un nouveau RuleName ou met à joir un existant
+    @Override
+    public RuleName save(RuleName ruleName) {
+<span class="fc" id="L47">        return repo.save(ruleName);</span>
+    }
+
+    
+    //Mettre à jour un RuleName identifié par son id
+    @Override
+    public RuleName update(Integer id, RuleName rn) {
+<span class="fc" id="L54">        RuleName existing = repo.findById(id)</span>
+<span class="fc" id="L55">                .orElseThrow(() -&gt; new IllegalArgumentException(&quot;RuleName introuvable id=&quot; + id));</span>
+<span class="fc" id="L56">        existing.setName(rn.getName());</span>
+<span class="fc" id="L57">        existing.setDescription(rn.getDescription());</span>
+<span class="fc" id="L58">        existing.setJson(rn.getJson());</span>
+<span class="fc" id="L59">        existing.setTemplate(rn.getTemplate());</span>
+<span class="fc" id="L60">        existing.setSql(rn.getSql());</span>
+<span class="fc" id="L61">        existing.setSqlPart(rn.getSqlPart());</span>
+<span class="fc" id="L62">        return repo.save(existing);</span>
+    }
+
+    
+    //Supprimer un ruleName identifié par son id.
+    @Override
+    public void deleteById(Integer id) {
+<span class="fc bfc" id="L69" title="All 2 branches covered.">        if (!repo.existsById(id)) {</span>
+<span class="fc" id="L70">            throw new IllegalArgumentException(&quot;RuleName introuvable id=&quot; + id);</span>
+        }
+<span class="fc" id="L72">        repo.deleteById(id);</span>
+<span class="fc" id="L73">    }</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

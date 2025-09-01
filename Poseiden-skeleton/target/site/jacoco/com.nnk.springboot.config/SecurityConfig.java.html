@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="fr"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../jacoco-resources/report.css" type="text/css"/><link rel="shortcut icon" href="../jacoco-resources/report.gif" type="image/gif"/><title>SecurityConfig.java</title><link rel="stylesheet" href="../jacoco-resources/prettify.css" type="text/css"/><script type="text/javascript" src="../jacoco-resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="info"><a href="../jacoco-sessions.html" class="el_session">Sessions</a></span><a href="../index.html" class="el_report">spring-boot-skeleton</a> &gt; <a href="index.source.html" class="el_package">com.nnk.springboot.config</a> &gt; <span class="el_source">SecurityConfig.java</span></div><h1>SecurityConfig.java</h1><pre class="source lang-java linenums">package com.nnk.springboot.config;
+
+import com.nnk.springboot.config.CustomUserDetailsService;
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.crypto.password.PasswordEncoder;
+
+/**
+ * Configuration Spring Security (authentification par session-based).
+ * &lt;p&gt;
+ * - Utilise un PasswordEncoder BCrypt pour vérifier les mots de passe en base.
+ * - Protège les routes : /user/** pour ADMIN, le reste authentifié, statiques/publics autorisés.
+ * - Expose la page de login par défaut de Spring sur /login (GET) + /login (POST).
+ * - Déconnecte via /app-logout (POST) avec invalidation de la session.
+ *
+ * Configuration Spring Security (session-based).
+ */
+@Configuration
+@EnableMethodSecurity
+<span class="nc" id="L25">public class SecurityConfig {</span>
+
+	
+	
+	
+	 /**
+     * Crée le bean {@link PasswordEncoder} basé sur BCrypt.
+     *
+     * @return un encodeur BCrypt utilisé par Spring Security pour comparer les mots de passe
+     */
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+<span class="nc" id="L37">        return new BCryptPasswordEncoder();</span>
+    }
+
+    
+     
+    
+    /**
+     * Construit la chaîne de filtres de sécurité.
+     * &lt;ul&gt;
+     *  
+     *   &lt;li&gt;Autorisations HTTP configurées&lt;/li&gt;
+     *   &lt;li&gt;Form login par défaut (/login), redirection succès vers /bidList/list&lt;/li&gt;
+     *   &lt;li&gt;Logout sur /app-logout (POST), redirection vers /login?logout&lt;/li&gt;
+     * &lt;/ul&gt;
+     *
+     * @param http configuration:  HttpSecurity injectée par Spring
+     * @return la {@link SecurityFilterChain} appliquée au contexte web
+     * @throws Exception si la construction de la chaîne échoue
+     */
+        
+    @Bean
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+<span class="nc" id="L59">        http</span>
+            
+<span class="nc" id="L61">            .authorizeHttpRequests(registry -&gt; registry</span>
+<span class="nc" id="L62">                .requestMatchers(&quot;/&quot;, &quot;/css/**&quot;, &quot;/images/**&quot;).permitAll()</span>
+                // on laisse /login géré par Spring Security (page par défaut)
+<span class="nc" id="L64">                .requestMatchers(&quot;/app/error&quot;).permitAll()</span>
+<span class="nc" id="L65">                .requestMatchers(&quot;/user/**&quot;).hasRole(&quot;ADMIN&quot;)</span>
+<span class="nc" id="L66">                .anyRequest().authenticated()</span>
+            )
+
+            // Page de login par défaut de Spring (GET /login + POST /login)
+<span class="nc" id="L70">            .formLogin(form -&gt; form</span>
+<span class="nc" id="L71">                .defaultSuccessUrl(&quot;/bidList/list&quot;, true)</span>
+<span class="nc" id="L72">                .failureUrl(&quot;/login?error&quot;)</span>
+<span class="nc" id="L73">                .permitAll()</span>
+            )
+
+            // On garde l'URL de logout personnalisée (utilisée par les templates)
+<span class="nc" id="L77">            .logout(logout -&gt; logout</span>
+<span class="nc" id="L78">                .logoutUrl(&quot;/app-logout&quot;)</span>
+<span class="nc" id="L79">                .logoutSuccessUrl(&quot;/login?logout&quot;)</span>
+<span class="nc" id="L80">                .invalidateHttpSession(true)</span>
+            );
+
+<span class="nc" id="L83">        return http.build();</span>
+    }
+
+    
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.jacoco.org/jacoco">JaCoCo</a> 0.8.12.202403310830</span></div></body></html>

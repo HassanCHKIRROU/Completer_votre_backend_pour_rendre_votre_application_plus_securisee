@@ -13,18 +13,29 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-/** Tests unitaires du service BidList */
+/**
+ * Tests unitaires de la classe BidListService.
+ * Cette classe teste les fonctionnalités CRUD du service BidList en utilisant Mockito
+ * pour simuler le repository et AssertJ pour les assertions.
+ */
 class BidListServiceTest {
 
     private BidListRepository repo;
     private BidListService service;
 
+    
+    //Configuration initiale avant chaque test
     @BeforeEach
     void setUp() {
         repo = mock(BidListRepository.class);
         service = new BidListServiceImpl(repo);
     }
 
+    
+    /*
+     * Teste la méthode findAll() lorsqu'elle retourne une liste de BidList.
+     * Vérifie que la taille de la liste et les valeurs des comptes sont correctes.
+     */
     @Test
     void findAll_returnsList() {
         when(repo.findAll()).thenReturn(List.of(
@@ -38,6 +49,11 @@ class BidListServiceTest {
                 .containsExactly("acc1", "acc2");
     }
 
+    
+    /*
+     * Teste la méthode findById() avec un ID existant.
+     * Vérifie que l'Optional contient la bonne valeur et que le compte est correct.
+     */
     @Test
     void findById_existing_returnsOptionalWithValue() {
         BidList b = new BidList("acc", "type", new BigDecimal("5.00"));
@@ -51,12 +67,22 @@ class BidListServiceTest {
                 .isEqualTo("acc");
     }
 
+    
+    /*
+     * Teste la méthode findById() avec un id inconnu.
+     * Vérifie que l'Optional retourné est vide.
+     */
     @Test
     void findById_unknown_returnsEmpty() {
         when(repo.findById(99)).thenReturn(Optional.empty());
         assertThat(service.findById(99)).isEmpty();
     }
 
+    
+    /*
+     * Teste la méthode save() pour vérifier qu'elle persiste correctement l'entité.
+     * Utilise ArgumentCaptor pour capturer l'objet passé au repository.
+     */
     @Test
     void save_persistsEntity() {
         BidList bid = new BidList("acc", "type", new BigDecimal("15.50"));
@@ -70,6 +96,11 @@ class BidListServiceTest {
         assertThat(saved.getBidQuantity()).isEqualByComparingTo("15.50");
     }
 
+    
+    /*
+     * Teste la méthode update() avec un ID existant.
+     * Vérifie que les champs sont correctement mis à jour et que save() est appelé
+     */
     @Test
     void update_existing_updatesFields() {
         BidList existing = new BidList("oldAcc", "oldType", new BigDecimal("1.00"));
@@ -85,6 +116,11 @@ class BidListServiceTest {
         verify(repo).save(existing);
     }
 
+    
+    /*
+     * Teste la méthode update() avec un ID inconnu.
+     * Vérifie qu'une IllegalArgumentException est levée et que save() n'est jamais appelé.
+     */
     @Test
     void update_unknownId_throws_andDoesNotSave() {
         when(repo.findById(999)).thenReturn(Optional.empty());
@@ -95,6 +131,11 @@ class BidListServiceTest {
         verify(repo, never()).save(any());
     }
 
+    
+    /*
+     * Teste la méthode deleteById() avec un ID existant.
+     * Vérifie que deleteById() est appelé sur le repository.
+     */
     @Test
     void deleteById_existing_deletes() {
         when(repo.existsById(1)).thenReturn(true);
@@ -102,6 +143,11 @@ class BidListServiceTest {
         verify(repo).deleteById(1);
     }
 
+    
+    /*
+     * Teste la méthode deleteById() avec un ID inconnu.
+     * Vérifie qu'une IllegalArgumentException est levée et que deleteById() n'est jamais appelé
+     */
     @Test
     void deleteById_unknown_throws() {
         when(repo.existsById(123)).thenReturn(false);

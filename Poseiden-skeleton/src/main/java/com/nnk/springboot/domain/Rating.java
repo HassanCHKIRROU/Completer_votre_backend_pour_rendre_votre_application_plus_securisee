@@ -38,8 +38,11 @@ public class Rating {
     @Column(name = "orderNumber")
     private Integer order;  
 
+    
+    //Constructeur sans parametres
     public Rating() {}
 
+    //Constructeur avec parametres
     public Rating(String moodysRating, String sandPRating, String fitchRating, Integer order) {
         this.moodysRating = moodysRating;
         this.sandPRating = sandPRating;
@@ -47,6 +50,8 @@ public class Rating {
         this.order = order;
     }
 
+    
+    //Getter/Setters
     public Integer getId() { return id; }
     public void setId(Integer id) { this.id = id; }
 
